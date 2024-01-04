@@ -16,10 +16,9 @@ public class 小顶堆 {
         int[] nums = new int[]{99,5,36,7,22,17,46,12,2,19,25,28,1,92,14};
 
         MinHeap heap = MinHeap.buildHeap(nums);
+        System.out.println(Arrays.toString(heap.data));
 
-        //System.out.println(Arrays.toString(heap.data));
-
-        heapSort(MinHeap.buildHeap(nums));
+        heapSort(MinHeap.buildHeap2(nums));
     }
 
     public static void heapSort(MinHeap heap){
@@ -32,7 +31,6 @@ public class 小顶堆 {
             heap.data[0] = heap.data[heap.size - 1];
             heap.size --;
 
-            //System.out.println(Arrays.toString(heap.data));
             heap.shiftDown(0);
 
         }
@@ -50,12 +48,25 @@ public class 小顶堆 {
             data = new int[size];
         }
 
+        //末尾添加元素，自低向上建堆,时间复杂度O( n*log(n) )
         public static  MinHeap buildHeap(int[] nums){
             MinHeap heap = new MinHeap(nums.length);
 
             for (int i = 0; i < nums.length; i++) {
                 heap.data[i] = nums[i];
                 heap.shiftUp(i);
+            }
+            return heap;
+        }
+
+        //从非叶子节点开始，从上到下建堆,时间复杂度O( n )
+        public static  MinHeap buildHeap2(int[] nums){
+            MinHeap heap = new MinHeap(nums.length);
+            for (int i = 0; i < nums.length; i++) {
+                heap.data[i] = nums[i];
+            }
+            for (int i = (nums.length/2 -1); i >=0 ; i--) {
+                heap.shiftDown(i);
             }
             return heap;
         }

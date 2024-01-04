@@ -4,6 +4,20 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456
+    druid:
+      initial-size: 10 # 以下是连接池配置
+      max-active: 100
+      min-idle: 10
+      max-wait: 5000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 180000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      max-evictable-idle-time-millis: 300000
 
 mybatis-plus:
   check-config-location: true
@@ -13,3 +27,6 @@ mybatis-plus:
     #全局地开启或关闭配置文件中的所有映射器已经配置的任何缓存
     cache-enabled: false
     call-setters-on-nulls: true
+logging:
+  level:
+    root: info
