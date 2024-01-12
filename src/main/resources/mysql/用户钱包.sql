@@ -14,6 +14,20 @@ CREATE TABLE `users_purse` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户钱包';
 
 
+CREATE TABLE `user_trade_record` (
+                                     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                     `trade_no` varchar(40) NOT NULL COMMENT '交易编号',
+                                     `uid` bigint(20) NOT NULL COMMENT '用户uid',
+                                     `num` bigint(20) NOT NULL COMMENT '交易数量',
+                                     `source_id` int(11) NOT NULL COMMENT '业务来源id',
+                                     `operate_type` tinyint(4) NOT NULL COMMENT '操作类型(1增加金币 2减少金币 3冲正金币)',
+                                     `create_time` datetime NOT NULL COMMENT '创建时间',
+                                     `update_time` datetime NOT NULL COMMENT '更新时间',
+                                     PRIMARY KEY (`id`) USING BTREE,
+                                     UNIQUE KEY `idx_tradeno_sourceid` (`trade_no`,`source_id`) COMMENT '来源交易号唯一性索引',
+                                     KEY `idx_create_time` (`create_time`) USING BTREE COMMENT '创建时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户交易记录表';
+
 
 --- 导入数据存储过程
 

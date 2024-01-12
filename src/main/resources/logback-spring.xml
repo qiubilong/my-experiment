@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false">
+    <property name="log.path" value="/data/logs/my-experiment"/>
+
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!-- Handle JUL -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date [%thread] [%file:%line] [%X{EagleEye-TraceID}] [%level %logger{0}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--	 Level: FATAL 0  ERROR 3  WARN 4  INFO 6  DEBUG 7 -->
+    <root level="INFO">
+        <appender-ref ref="console"/>
+    </root>
+
+</configuration>

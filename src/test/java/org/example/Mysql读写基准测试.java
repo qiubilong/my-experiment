@@ -5,8 +5,10 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import org.example.web.dao.entity.User;
 import org.example.web.dao.entity.UserPurse;
+import org.example.web.dao.entity.UserTradeRecord;
 import org.example.web.dao.mapper.UserMapper;
 import org.example.web.dao.mapper.UserPurseMapper;
+import org.example.web.dao.mapper.UserTradeRecordMapper;
 import org.example.web.service.UserPurseService;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -15,9 +17,12 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static org.example.web.dao.entity.UserTradeRecord.OperateType.GOLD_DEC;
 
 /**
  * @author chenxuegui
@@ -27,7 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 @Warmup(iterations=3,time = 5, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations=3,time = 10, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations=5,time = 10, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 public class Mysql读写基准测试 {
 
@@ -66,6 +71,35 @@ public class Mysql读写基准测试 {
         userPurseMapper.updateGoldCost(uid,goldCost);
     }
 
+    /** 顺序写 */
+    //@Benchmark
+    public void insertTradeRecordIncrement() {
+        Long goldNum = random.nextInt(20) + 1L;
+        Long uid = 1L + random.nextInt(1000000);
+        String tradeNo = System.currentTimeMillis() + "#" + autoInc.incrementAndGet();
+        Date curDate = new Date();
+        UserTradeRecord record = new UserTradeRecord().setTradeNo(tradeNo).setUid(uid).setNum(goldNum).setSourceId(1)
+                .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
+        tradeRecordMapper.insert(record);
+    }
+
+    /** 随机写 */
+    //@Benchmark
+    public void insertTradeRecordRandom() {
+        Long goldNum = random.nextInt(20) + 1L;
+        Long uid = 1L + random.nextInt();
+        String tradeNo = System.currentTimeMillis() + "#" + autoInc.incrementAndGet();
+        Date curDate = new Date();
+        UserTradeRecord record = new UserTradeRecord().setId(uid).setTradeNo(tradeNo).setUid(uid).setNum(goldNum).setSourceId(1)
+                .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
+        try {
+            tradeRecordMapper.insert(record);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * 随机update并记录流水
      * */
@@ -82,13 +116,15 @@ public class Mysql读写基准测试 {
     }
 
 
+    private Random random = new Random();
+    private AtomicLong autoInc = new AtomicLong();
+
     private ConfigurableApplicationContext context;
     private UserMapper userMapper;
     private UserPurseMapper userPurseMapper;
     private UserPurseService userPurseService;
+    private UserTradeRecordMapper tradeRecordMapper;
 
-    private Random random = new Random();
-    private AtomicLong autoInc = new AtomicLong();
 
 
     @Setup
@@ -99,6 +135,7 @@ public class Mysql读写基准测试 {
         this.userMapper = context.getBean(UserMapper.class);
         this.userPurseMapper = context.getBean(UserPurseMapper.class);
         this.userPurseService = context.getBean(UserPurseService.class);
+        this.tradeRecordMapper = context.getBean(UserTradeRecordMapper.class);
     }
 
     @TearDown

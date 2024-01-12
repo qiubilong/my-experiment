@@ -14,6 +14,9 @@ import java.util.Date;
 @Data
 @TableName("users_purse")
 public class UserPurse {
+
+    public final static UserPurse EMPTY = new UserPurse();
+
     @TableId(type = IdType.INPUT)
     private Long uid;
 
