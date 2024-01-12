@@ -2,13 +2,13 @@ server:
   port: 8080
   undertow:
     threads:
-      worker: 32
+      worker: 16
       io: 4
     buffer-size: 16364
     direct-buffers: true
   tomcat:
     threads:
-      max: 32
+      max: 8
 
 spring:
   datasource:
