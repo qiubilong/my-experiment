@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @TableName("users_purse")
-public class UserPurse {
+public class UserPurse implements java.io.Serializable{
 
     public final static UserPurse EMPTY = new UserPurse();
 

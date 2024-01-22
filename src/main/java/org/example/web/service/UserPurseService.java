@@ -6,14 +6,15 @@ import io.lettuce.core.api.sync.RedisCommands;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.Service;
 import org.example.web.common.BizServiceException;
 import org.example.web.common.ResultCode;
 import org.example.web.dao.entity.UserPurse;
 import org.example.web.dao.entity.UserTradeRecord;
 import org.example.web.dao.mapper.UserPurseMapper;
 import org.example.web.dao.mapper.UserTradeRecordMapper;
+import org.example.web.rpc.IUserPurseService;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
@@ -28,7 +29,7 @@ import static org.example.web.dao.entity.UserTradeRecord.OperateType.GOLD_DEC;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class UserPurseService {
+public class UserPurseService implements IUserPurseService {
     private final UserPurseMapper userPurseMapper;
     private final UserTradeRecordMapper tradeRecordMapper;
 
@@ -62,10 +63,11 @@ public class UserPurseService {
         return userPurseMapper.selectById(uid);
     }
 
+    @Override
     public UserPurse getUserPurseInfoFromCacheRedis(Long uid) {
         String key = "UserPurseInfo_"+ uid;
         String data = redis.get(key);
-        if(StringUtils.isEmpty(data)){
+        if(StringUtils.isNotEmpty(data)){
             return JSONObject.parseObject(data,UserPurse.class);
         }
         UserPurse vo = userPurseMapper.selectById(uid);
@@ -78,8 +80,15 @@ public class UserPurseService {
         return vo;
     }
 
+    @Override
     public UserPurse getUserPurseInfoFromCacheLocal(Long uid) {
-        return null;
+        return UserPurse.EMPTY;
+    }
+
+    @Override
+    public Long incrUserPurseGoldNum(Long uid, Long num) {
+        String key = "UserPurseGoldNum_"+ uid;
+        return redis.incrby(key,num);
     }
 
 

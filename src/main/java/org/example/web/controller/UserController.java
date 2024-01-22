@@ -35,4 +35,9 @@ public class UserController {
     public UserPurse getUserPurseInfoFromCacheLocal(@RequestParam Long uid){
         return UserPurse.EMPTY;
     }
+
+    @GetMapping("/incrUserPurseGoldNum")
+    public Long incrUserPurseGoldNum(@RequestParam Long uid,@RequestParam Long num){
+        return userPurseService.incrUserPurseGoldNum(uid,num);
+    }
 }
