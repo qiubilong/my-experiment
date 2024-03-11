@@ -29,6 +29,8 @@ public class BloomFilterRedissonTest {
         for (Integer i = 0; i < expectedInsertions; i++) {
             bloomFilter.add(i);
         }
+
+
         // 统计元素
         int count = 0;
         for (int i = expectedInsertions; i < expectedInsertions*2; i++) {

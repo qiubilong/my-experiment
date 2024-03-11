@@ -54,3 +54,22 @@ mybatis-plus:
 logging:
   level:
     root: info
+
+
+gamewhitelist:
+  channelSet:
+    - media_source
+    - bigoads_int
+    - kwaiforbusiness_int
+    - huaweiadsglobal_int
+    - bytedanceglobal_int
+    - shalltry_int
+    - snapchat_int
+    - 社媒下载链接
+    - mail.ru_int
+    - KOL
+    - huawei
+    - Social_tiktok
+    - Facebook Ads
+    - shareit_int
+    - Social_youtube
