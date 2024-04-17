@@ -8,9 +8,11 @@ import org.redisson.config.Config;
 public class BloomFilterRedissonTest {
 
     /** 预计插入的数据 */
-    private static Integer expectedInsertions = 1024;
+    private static Integer expectedInsertions = 512;
     /** 误判率 */
     private static Double fpp = 0.01;
+
+    private static String key = "watched_ids";
 
 
     public static void main(String[] args) {
@@ -20,9 +22,9 @@ public class BloomFilterRedissonTest {
         // 初始化布隆过滤器
         RedissonClient client = Redisson.create(config);
 
-        client.getKeys().delete("watched_ids");
+        client.getKeys().delete(key);
 
-        RBloomFilter<Object> bloomFilter = client.getBloomFilter("watched_ids");
+        RBloomFilter<Object> bloomFilter = client.getBloomFilter(key);
 
         bloomFilter.tryInit(expectedInsertions, fpp);
         // 布隆过滤器增加元素
@@ -38,7 +40,13 @@ public class BloomFilterRedissonTest {
                 count++;
             }
         }
+
         System.out.println("误判次数" + count);
+
+
+        for (Integer i = 0; i < expectedInsertions; i++) {
+            client.getSet(key+"_Set").add(i);
+        }
 
     }
 }

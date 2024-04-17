@@ -1,4 +1,4 @@
-package org.example.agro;
+package org.example.agro.array;
 
 import java.util.ArrayList;
 import java.util.List;
