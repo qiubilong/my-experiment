@@ -16,7 +16,7 @@ public class 组合子集 {
 
     public static void main(String[] args) {
 
-        int[] nums = {1,2,2};
+        int[] nums = {1,2,3};
         combine(nums);
 
         System.out.println(all);
