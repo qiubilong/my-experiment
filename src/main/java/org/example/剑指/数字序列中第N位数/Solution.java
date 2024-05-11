@@ -42,6 +42,9 @@ class Solution {
         StringBuilder sb = new StringBuilder(100);
         for (int i = 0; i <= n; i++) {
             sb.append(i);
+            if(sb.length()>n){
+                break;
+            }
         }
         //System.out.println(sb.toString());
         return sb.charAt(n) - '0';
