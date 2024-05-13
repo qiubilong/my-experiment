@@ -1,15 +1,14 @@
 package org.example.剑指.数字翻译成字符串;
 
-import org.assertj.core.util.Lists;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * https://blog.csdn.net/baichoufei90/article/details/106637584
+ * 
  */
 
-public class Solution {
+public class Solution_输出不同字符串 {
     public static int crackNumber(int ciphertext) {
         if(ciphertext<10){
             return 1;
@@ -36,27 +35,31 @@ public class Solution {
     }
 
     private int count;
+    private List<String> result = new ArrayList<>();
     public int backtrack(int num) {
         if (num<=9) {
             this.count = 1;
             return this.count;
         }
 
-        backtrackDo(num+"",0);
+        backtrackDo(num+"",0, "");
         return this.count;
     }
 
-    private  void backtrackDo(String numText, int index) {
+    private  void backtrackDo(String numText, int index,String current) {
         if (index == numText.length() -1 ) {
             this.count ++ ;
+            this.result.add(current);
             return;
         }
-        backtrackDo(numText,index+1);
+        String currentNew = current +" "+ numText.charAt(index);
+        backtrackDo(numText,index+1, currentNew);
 
         String sub = numText.substring(index, index + 2);
         int two = Integer.parseInt(sub);
         if(two>9 && two < 26){
-            backtrackDo(numText,index+2);
+            String currentNew2 = current +" "+ sub;
+            backtrackDo(numText,index+2,currentNew2);
         }
     }
 
@@ -85,10 +88,11 @@ public class Solution {
         int num = 12258;
         System.out.println(crackNumber(num));
 
-        Solution solution = new Solution();
+        Solution_输出不同字符串 solution = new Solution_输出不同字符串();
         System.out.println(solution.backtrack(num));
+        System.out.println(solution.result);
 
-        Solution solution1 = new Solution();
+        Solution_输出不同字符串 solution1 = new Solution_输出不同字符串();
         solution1.backtrack(num);
         System.out.println(solution1.count);
     }
