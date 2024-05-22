@@ -42,7 +42,7 @@ public class Solution {
     //二分法查找
     public int findMissNum(int[] records){
         if(records.length==0){
-            return -1;
+            throw new IllegalArgumentException();
         }
 
         int num = findMissNumBinary(records,0,records.length-1);
@@ -51,6 +51,7 @@ public class Solution {
     //寻找第一个数字大于索引的数
     public int findMissNumBinary(int[] nums,int left,int right){
         if(left > right){
+            //如果没有缺失的数字，则缺失的是最后一个数字
             return left;
         }
         int mid = left + (right-left)/2;
