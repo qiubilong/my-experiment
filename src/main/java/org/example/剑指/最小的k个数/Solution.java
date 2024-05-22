@@ -3,6 +3,9 @@ package org.example.剑指.最小的k个数;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 
+/**
+ * https://leetcode.cn/problems/smallest-k-lcci/description/
+ */
 class Solution {
     public int[] smallestK(int[] arr, int k) {
         if(k == 0 ){
