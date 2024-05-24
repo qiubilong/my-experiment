@@ -51,6 +51,7 @@ public class Solution_层次遍历 {
         System.out.println(solution.maxDepth(root));
         System.out.println(BinaryTree.levelOrder(root));
         System.out.println(BinaryTree.levelOrder2(root));
+        System.out.println(BinaryTree.levelOrder4(root));
 
     }
 }

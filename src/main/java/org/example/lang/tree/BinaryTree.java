@@ -64,6 +64,7 @@ public class BinaryTree {
         }
         return result;
     }
+    /** 层次遍历，使用双列表 */
     public static List<List<Integer>> levelOrder2(TreeNode root) {
         List<List<Integer>> result = new LinkedList<>();
         if(root == null){
@@ -90,8 +91,8 @@ public class BinaryTree {
         }
         return result;
     }
-
-    public List<List<Integer>> levelOrder3(TreeNode root) {
+    /** 层次遍历，使用双队列 */
+    public static List<List<Integer>> levelOrder3(TreeNode root) {
         List<List<Integer>> result = new LinkedList<>();
         if(root == null){
             return result;
@@ -117,6 +118,37 @@ public class BinaryTree {
         }
         return result;
     }
+
+    /** 层次遍历，使用单队列 */
+    public static List<List<Integer>> levelOrder4(TreeNode root) {
+        List<List<Integer>> result = new LinkedList<>();
+        if(root == null){
+            return result;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()){
+            List<Integer> levelList = new ArrayList<>();
+
+            int levelCount = queue.size();
+            for (int i = levelCount; i > 0; i--) {
+                TreeNode node = queue.poll();
+                levelList.add(node.val);
+
+                if(node.left != null){
+                    queue.add(node.left);
+                }
+                if(node.right != null){
+                    queue.add(node.right);
+                }
+            }
+
+            result.add(levelList);
+        }
+        return result;
+    }
+
 
     /** 前序遍历  */
     public static List<Integer> preOrder(TreeNode root){
