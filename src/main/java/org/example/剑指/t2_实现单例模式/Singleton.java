@@ -1,4 +1,4 @@
-package org.example.剑指.单例设计模式;
+package org.example.剑指.t2_实现单例模式;
 
 /** 饿汉式，JDK中 RunTime 工具类使用这种模式
  * @author chenxuegui

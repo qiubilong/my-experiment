@@ -6,6 +6,7 @@ package org.example.剑指.t53_在排序数组中查找数字.排序数组中缺
  * https://leetcode.cn/problems/que-shi-de-shu-zi-lcof/description/
  * https://www.acwing.com/solution/content/229976/
  * 一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0到n-1之内。在范围0到n-1的n个数字中有且只有一个数字不在该数组中，请找出这个数字
+ * https://zhxiongfei.github.io/post/%E5%89%91%E6%8C%87offer53.%E7%BC%BA%E5%A4%B1%E7%9A%84%E6%95%B0%E5%AD%97/
  */
 public class Solution {
 

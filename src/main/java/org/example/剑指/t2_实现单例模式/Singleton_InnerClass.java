@@ -1,4 +1,4 @@
-package org.example.剑指.单例设计模式;
+package org.example.剑指.t2_实现单例模式;
 
 /** 懒汉式
  * @author chenxuegui
