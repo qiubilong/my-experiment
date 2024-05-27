@@ -66,7 +66,8 @@ public class Solution {
         nums[j] = temp;
     }
 
-    /** 利用下标排序原有数组 ,空间复杂度O(1),数字从1开始 */
+    /** 利用下标排序原有数组 ,将元素交换到对应的位置
+     * 空间复杂度O(1),数字从1开始 */
     public List<Integer> findDupNums_Index(int[] nums){
         if(nums.length <= 0){
             return new ArrayList<>();
