@@ -1,10 +1,10 @@
-package org.example.ok.剑指.位运算;
+package org.example.ok.剑指.t15_二进制中1的个数;
 
 /**
  * @author chenxuegui
  * @since 2024/4/22
  */
-public class 二进制中1的个数 {
+public class Solution {
     public static void main(String[] args) {
         System.out.println(countOne(11));
         System.out.println(countOne(2147483645));
@@ -34,6 +34,7 @@ public class 二进制中1的个数 {
             if(value == 1){
                 count ++;
             }
+            //无符号右移
             n = n >>> 1;
         }
         return count;

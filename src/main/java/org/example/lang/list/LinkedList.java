@@ -30,6 +30,17 @@ public class LinkedList {
         System.out.println(result);
     }
 
+    public static ListNode findNode(ListNode head, int val){
+        ListNode current = head;
+        while (current != null){
+            if(current.val == val){
+                return current;
+            }
+            current = current.next;
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         int[] nums = new int[]{3,6,4,1};
         ListNode head = LinkedList.buildList(nums);
