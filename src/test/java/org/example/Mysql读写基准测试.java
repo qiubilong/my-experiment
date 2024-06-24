@@ -1,8 +1,5 @@
 package org.example;
 
-import io.lettuce.core.RedisClient;
-import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.core.api.sync.RedisCommands;
 import org.example.web.dao.entity.User;
 import org.example.web.dao.entity.UserPurse;
 import org.example.web.dao.entity.UserTradeRecord;
@@ -68,7 +65,7 @@ public class Mysql读写基准测试 {
     public void updateGoldCost(){
         Long goldCost = random.nextInt(20) + 1L;
         Long uid = 1L + random.nextInt(1000000);
-        userPurseMapper.updateGoldCost(uid,goldCost);
+        userPurseMapper.decrGoldCost(uid,goldCost);
     }
 
     /** 顺序写 */
@@ -109,7 +106,7 @@ public class Mysql读写基准测试 {
         Long uid = 1L + random.nextInt(1000000);
         String tradeNo = System.currentTimeMillis() + "#" + autoInc.incrementAndGet();
         try {
-            userPurseService.decrUserGold(uid,goldCost,tradeNo,2);
+            //userPurseService.decrUserGold(uid,goldCost,tradeNo,2);
         }catch (Exception e){
 
         }

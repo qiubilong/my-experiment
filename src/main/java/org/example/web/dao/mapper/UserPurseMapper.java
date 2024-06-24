@@ -12,5 +12,9 @@ import org.example.web.dao.entity.UserPurse;
 public interface UserPurseMapper extends BaseMapper<UserPurse> {
 
     @Update("UPDATE `users_purse` SET `gold_num`=`gold_num`-#{goldCost},`update_time`=now() WHERE `uid`=#{uid} and state = 1  AND `gold_num` - #{goldCost} >= 0")
+    int decrGoldCost(@Param("uid") Long uid, @Param("goldCost") Long goldCost);
+
+
+    @Update("UPDATE `users_purse` SET `gold_num`=#{goldCost},`update_time`=now() WHERE `uid`=#{uid} and state = 1")
     int updateGoldCost(@Param("uid") Long uid, @Param("goldCost") Long goldCost);
 }

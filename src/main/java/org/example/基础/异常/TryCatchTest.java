@@ -1,6 +1,5 @@
-package org.example.异常;
+package org.example.基础.异常;
 
-import org.example.性能测试.JmhHello;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
