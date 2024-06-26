@@ -26,11 +26,13 @@ import static org.example.web.dao.entity.UserTradeRecord.OperateType.GOLD_DEC;
  * @author chenxuegui
  * @since 2024/6/21
  * 事务不生效场景
- * 1、事务不开启、没配置、service没有被容器管理
- * 2、方法内部非事务方法调用事务方法，未经过事务代理
+ * 1、事务不开启、没配置、service没有被容器管理、存储引擎不支持
+ * 2、方法内部调用，未经过事务代理
  * 3、未配置合理的回滚异常，默认不会滚Checked Exception
  * 4、final方法事务无效
  * 5、static方法事务无效
+ * 6、事务范围不同，被覆盖
+ * 7、方法内部调用
  *
  */
 @Service
@@ -46,6 +48,33 @@ public class TransactionService implements ApplicationContextAware {
 
     private final RedissonClient redissonClient;
     private final UserPurseService userPurseService;
+
+    /** 方法内部调用，事务无效 */
+    public void decrUserGoldLockWithInner(Long uid, Long goldNum){
+        decrUserGoldLockWithInner2(uid,goldNum);
+    }
+    @Transactional(rollbackFor = Throwable.class, propagation = Propagation.REQUIRED)
+    public void decrUserGoldLockWithInner2(Long uid, Long goldNum){
+        Long tradeNo = userPurseService.generateOrderNo();
+
+        Date curDate = new Date();
+        UserTradeRecord record = new UserTradeRecord().setTradeNo(tradeNo+"").setUid(uid).setNum(goldNum).setSourceId(1)
+                .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
+        //新增交易记录
+        try {
+            tradeRecordMapper.insert(record);
+        }catch (DuplicateKeyException e){
+            throw new BizServiceException(ResultCode.REPETITIVE_OPERATION);
+        }
+        log.info("decrUserGoldLockDo tradeNo={}",tradeNo);
+
+        int rows = userPurseMapper.decrGoldCost(uid, goldNum);
+        if(rows<=0){
+            throw new BizServiceException(ResultCode.USER_PURSE_MONEY_NOT_ENOUGH_ERROR,uid+"");
+        }
+    }
+
+
 
 
     /***
@@ -160,6 +189,30 @@ public class TransactionService implements ApplicationContextAware {
         if(tradeNo %2 == 1){
             throw new RuntimeException();
         }
+    }
+
+    @Transactional(rollbackFor = Throwable.class, propagation = Propagation.REQUIRED)
+    public void decrUserGoldLockWithThread(Long uid, Long goldNum){
+        Long tradeNo = userPurseService.generateOrderNo();
+
+        Date curDate = new Date();
+        UserTradeRecord record = new UserTradeRecord().setTradeNo(tradeNo+"").setUid(uid).setNum(goldNum).setSourceId(1)
+                .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
+        //新增交易记录
+        try {
+            tradeRecordMapper.insert(record);
+        }catch (DuplicateKeyException e){
+            throw new BizServiceException(ResultCode.REPETITIVE_OPERATION);
+        }
+        log.info("decrUserGoldLockDo tradeNo={}",tradeNo);
+
+        new Thread(() -> {
+            int rows = userPurseMapper.decrGoldCost(uid, goldNum);
+            if(rows<=0){
+                throw new BizServiceException(ResultCode.USER_PURSE_MONEY_NOT_ENOUGH_ERROR,uid+"");
+            }
+        }).start();
+
     }
 
 }

@@ -40,6 +40,15 @@ public class TestTransaction {
         log.info("prepareUserData");
     }
 
+
+    /** 方法内部调用,事务不生效 */
+    @Test
+    public void decrUserGoldLockWithInner() throws Exception{
+        for (int i = 0; i < 10; i++) {
+            transactionService.decrUserGoldLockWithInner(uid,goldNum);
+        }
+    }
+
     /** 事务默认不会滚Checked Exception */
     @Test
     public void decrUserGoldLockWithException() throws Exception{
@@ -71,5 +80,12 @@ public class TestTransaction {
         }
     }
 
+    /** 方法内部异步调用,事务不生效 */
+    @Test
+    public void decrUserGoldLockWithThread() throws Exception{
+        for (int i = 0; i < 10; i++) {
+            transactionService.decrUserGoldLockWithThread(uid,goldNum);
+        }
+    }
 
 }
