@@ -52,7 +52,7 @@ public class UserPurseService implements IUserPurseService {
             lock.lock(5, TimeUnit.SECONDS);
 
             log.info("decrUserGoldLockSuccess tradeNo={}",tradeNo);
-            decrUserGold(uid,goldNum,tradeNo,1);
+            decrUserGoldNew(uid,goldNum,tradeNo,1);
             if(tradeNo % 2 == 1){
                 try {
                     Thread.sleep(7 *1000);
@@ -79,7 +79,7 @@ public class UserPurseService implements IUserPurseService {
      * @param tradeNo 交易编号
      * @param sourceId 业务来源Id
      */
-    public void decrUserGold(Long uid, Long goldNum,Long tradeNo,Integer sourceId) throws Exception{
+    public void decrUserGoldNew(Long uid, Long goldNum, Long tradeNo, Integer sourceId) throws Exception{
         Date curDate = new Date();
         UserTradeRecord record = new UserTradeRecord().setTradeNo(tradeNo+"").setUid(uid).setNum(goldNum).setSourceId(sourceId)
                 .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
@@ -137,7 +137,18 @@ public class UserPurseService implements IUserPurseService {
         return Long.valueOf(now.toString("yyMMddHHmm")+""+redis.incr(key));
     }
 
+    /** 独立事务 */
+    @Deprecated
     @Transactional(rollbackFor = Throwable.class, propagation = Propagation.REQUIRES_NEW)
+    public void decrUserGoldNew(Long uid, Long goldNum){
+        int rows = userPurseMapper.decrGoldCost(uid, goldNum);
+        if(rows<=0){
+            throw new BizServiceException(ResultCode.USER_PURSE_MONEY_NOT_ENOUGH_ERROR,uid+"");
+        }
+        log.info("decrUserGoldDo goldNum={}",goldNum);
+    }
+
+
     public void decrUserGold(Long uid, Long goldNum){
         int rows = userPurseMapper.decrGoldCost(uid, goldNum);
         if(rows<=0){
@@ -145,5 +156,7 @@ public class UserPurseService implements IUserPurseService {
         }
         log.info("decrUserGoldDo goldNum={}",goldNum);
     }
+
+
 
 }

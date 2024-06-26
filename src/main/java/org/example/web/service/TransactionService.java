@@ -33,6 +33,7 @@ import static org.example.web.dao.entity.UserTradeRecord.OperateType.GOLD_DEC;
  * 5、static方法事务无效
  * 6、事务范围不同，被覆盖
  * 7、方法内部调用
+ * 8、try-catch异常
  *
  */
 @Service
@@ -184,7 +185,7 @@ public class TransactionService implements ApplicationContextAware {
         /** 1、将decrUserGold方法在同个service时是内部调用，它的事务配置无效
          *  2、两个事务范围不同，会导致事务不能一起回滚
          */
-        userPurseService.decrUserGold(uid,goldNum);
+        userPurseService.decrUserGoldNew(uid,goldNum);
 
         if(tradeNo %2 == 1){
             throw new RuntimeException();
@@ -212,6 +213,30 @@ public class TransactionService implements ApplicationContextAware {
                 throw new BizServiceException(ResultCode.USER_PURSE_MONEY_NOT_ENOUGH_ERROR,uid+"");
             }
         }).start();
+
+    }
+
+
+    @Transactional(rollbackFor = Throwable.class, propagation = Propagation.REQUIRED)
+    public void decrUserGoldLockWithTryCatch(Long uid, Long goldNum){
+        Long tradeNo = userPurseService.generateOrderNo();
+
+        Date curDate = new Date();
+        UserTradeRecord record = new UserTradeRecord().setTradeNo(tradeNo+"").setUid(uid).setNum(goldNum).setSourceId(1)
+                .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
+        //新增交易记录
+        try {
+            tradeRecordMapper.insert(record);
+        }catch (DuplicateKeyException e){
+            throw new BizServiceException(ResultCode.REPETITIVE_OPERATION);
+        }
+        log.info("decrUserGoldLockDo tradeNo={}",tradeNo);
+
+        try {
+            userPurseService.decrUserGold(uid,goldNum);
+        }catch (Exception e){
+            log.error("decrUserGoldLockWithTryCatch error",e);
+        }
 
     }
 

@@ -43,7 +43,7 @@ public class TestTransaction {
 
     /** 方法内部调用,事务不生效 */
     @Test
-    public void decrUserGoldLockWithInner() throws Exception{
+    public void decrUserGoldLockWithInner(){
         for (int i = 0; i < 10; i++) {
             transactionService.decrUserGoldLockWithInner(uid,goldNum);
         }
@@ -82,9 +82,17 @@ public class TestTransaction {
 
     /** 方法内部异步调用,事务不生效 */
     @Test
-    public void decrUserGoldLockWithThread() throws Exception{
+    public void decrUserGoldLockWithThread() {
         for (int i = 0; i < 10; i++) {
             transactionService.decrUserGoldLockWithThread(uid,goldNum);
+        }
+    }
+
+    /** try-catch异常,事务不生效 */
+    @Test
+    public void decrUserGoldLockWithTryCatch(){
+        for (int i = 0; i < 10; i++) {
+            transactionService.decrUserGoldLockWithTryCatch(uid,goldNum);
         }
     }
 
