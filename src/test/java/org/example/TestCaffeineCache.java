@@ -22,6 +22,7 @@ public class TestCaffeineCache {
     @Autowired
     private JvmCacheService jvmCacheService;
 
+    /** 测试缓存时间 */
     @Test
     public void testCacheTime() throws Exception{
         for (int i = 0; i < 10; i++) {
@@ -31,6 +32,7 @@ public class TestCaffeineCache {
         }
     }
 
+    /** 测试并发回源 */
     @Test
     public void testCacheParallel() throws Exception{
         IntStream.range(0,20).parallel().forEach(v->{

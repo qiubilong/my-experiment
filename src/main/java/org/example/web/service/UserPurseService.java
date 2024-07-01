@@ -44,18 +44,19 @@ public class UserPurseService implements IUserPurseService {
 
 
     @Transactional(rollbackFor = Throwable.class,propagation = Propagation.REQUIRED)
-    public void decrUserGoldLock(Long uid, Long goldNum,Long tradeNo) throws Exception{
+    public void decrUserGoldLock(Long uid, Long goldNum){
         String key = "decrUserGoldLock"+uid;
+        Long tradeNo = generateOrderNo();
         RLock lock = redissonClient.getLock(key);
 
         try {
             lock.lock(5, TimeUnit.SECONDS);
 
             log.info("decrUserGoldLockSuccess tradeNo={}",tradeNo);
-            decrUserGoldNew(uid,goldNum,tradeNo,1);
+            decrUserGold(uid,goldNum,tradeNo,1);
             if(tradeNo % 2 == 1){
                 try {
-                    Thread.sleep(7 *1000);
+                    Thread.sleep(10 *1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -67,11 +68,6 @@ public class UserPurseService implements IUserPurseService {
         }
     }
 
-    /** 无事务方法调用事务方法，事务无效 */
-    public void decrUserGoldLockInner(Long uid, Long goldNum,Long tradeNo) throws Exception {
-        decrUserGoldLock(uid,goldNum,tradeNo);
-    }
-
 
      /**
      * @param uid
@@ -79,7 +75,7 @@ public class UserPurseService implements IUserPurseService {
      * @param tradeNo 交易编号
      * @param sourceId 业务来源Id
      */
-    public void decrUserGoldNew(Long uid, Long goldNum, Long tradeNo, Integer sourceId) throws Exception{
+    public void decrUserGold(Long uid, Long goldNum, Long tradeNo, Integer sourceId){
         Date curDate = new Date();
         UserTradeRecord record = new UserTradeRecord().setTradeNo(tradeNo+"").setUid(uid).setNum(goldNum).setSourceId(sourceId)
                 .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
@@ -88,10 +84,6 @@ public class UserPurseService implements IUserPurseService {
             tradeRecordMapper.insert(record);
         }catch (DuplicateKeyException e){
             throw new BizServiceException(ResultCode.REPETITIVE_OPERATION);
-        }
-        log.info("decrUserGoldLockDo tradeNo={}",tradeNo);
-        if(tradeNo %2 == 1){
-            throw new ClassNotFoundException();
         }
         int rows = userPurseMapper.decrGoldCost(uid, goldNum);
         if(rows<=0){
