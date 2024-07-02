@@ -1,6 +1,5 @@
 package org.example;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -13,7 +12,6 @@ import org.example.web.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 @Slf4j
 @SpringBootTest
-public class SampleTest {
+public class BatchInsertOrUpdateTest {
 
     @Autowired
     private UserMapper userMapper;
@@ -108,7 +106,7 @@ public class SampleTest {
     public void testBatchInsertInSession(){
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
 
-        List<User> list = testMessageTime();
+        List<User> list = generateUserList();
         List<List<User>> lists = Lists.partition(list, 1000);
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         long start = System.currentTimeMillis();

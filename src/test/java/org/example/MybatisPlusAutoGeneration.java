@@ -15,9 +15,9 @@ public class MybatisPlusAutoGeneration {
 
         FastAutoGenerator.create(url, username, password)
                 .globalConfig(builder -> {
-                    builder.author("baomidou") // 设置作者
+                    builder.author("chen") // 设置作者
                             .disableOpenDir()
-                            .enableSwagger() // 开启 swagger 模式
+                            .enableSwagger()
                             .commentDate("yyyy-MM-dd hh:mm:ss")   //注释日期
                             .dateType(DateType.ONLY_DATE)   //定义生成的实体类中日期的类型 TIME_PACK=LocalDateTime;ONLY_DATE=Date;
                             .outputDir(System.getProperty("user.dir") + "/target");
@@ -25,7 +25,7 @@ public class MybatisPlusAutoGeneration {
                 })
                 .strategyConfig(builder -> {
                     // 设置需要生成的表名
-                  builder.addInclude("sys_oper_user_log")
+                  builder.addInclude("single_table")
                           .entityBuilder()
                           .enableTableFieldAnnotation()
                           .enableChainModel().

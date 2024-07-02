@@ -28,8 +28,8 @@ import static org.example.web.dao.entity.UserTradeRecord.OperateType.GOLD_DEC;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-@Warmup(iterations=3,time = 5, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations=5,time = 10, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations=3,time = 3, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations=3,time = 3, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 public class Mysql读写基准测试 {
 
@@ -69,7 +69,7 @@ public class Mysql读写基准测试 {
     }
 
     /** 顺序写 */
-    //@Benchmark
+    @Benchmark
     public void insertTradeRecordIncrement() {
         Long goldNum = random.nextInt(20) + 1L;
         Long uid = 1L + random.nextInt(1000000);
@@ -81,7 +81,7 @@ public class Mysql读写基准测试 {
     }
 
     /** 随机写 */
-    //@Benchmark
+    @Benchmark
     public void insertTradeRecordRandom() {
         Long goldNum = random.nextInt(20) + 1L;
         Long uid = 1L + random.nextInt();
@@ -92,7 +92,7 @@ public class Mysql读写基准测试 {
         try {
             tradeRecordMapper.insert(record);
         }catch (Exception e){
-            e.printStackTrace();
+
         }
     }
 

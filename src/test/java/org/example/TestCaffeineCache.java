@@ -40,13 +40,7 @@ public class TestCaffeineCache {
             log.info("testCacheParallel1 purse={}",purse);
         });
 
-        Thread.sleep(5 * 1000);
-        log.info("testCacheParallel");
-        IntStream.range(0,20).parallel().forEach(v->{
-            UserPurse purse = jvmCacheService.queryUserPurseProtect(uid);
-            log.info("testCacheParallel2 purse={}",purse);
 
-        });
     }
 
 }
