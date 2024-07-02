@@ -1,8 +1,11 @@
 package org.example;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.example.web.dao.entity.SingleTable;
 import org.example.web.dao.entity.User;
 import org.example.web.dao.entity.UserPurse;
 import org.example.web.dao.entity.UserTradeRecord;
+import org.example.web.dao.mapper.SingleTableMapper;
 import org.example.web.dao.mapper.UserMapper;
 import org.example.web.dao.mapper.UserPurseMapper;
 import org.example.web.dao.mapper.UserTradeRecordMapper;
@@ -15,6 +18,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,8 +32,8 @@ import static org.example.web.dao.entity.UserTradeRecord.OperateType.GOLD_DEC;
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-@Warmup(iterations=3,time = 3, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations=3,time = 3, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations=3,time = 10, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations=3,time = 10, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 public class Mysql读写基准测试 {
 
@@ -52,7 +56,7 @@ public class Mysql读写基准测试 {
 
     /**大表io型
      * */
-    @Benchmark
+   // @Benchmark
     public void selectUserPurseById(){
         Long uid = 1L + random.nextInt(1000000);
         UserPurse purse = userPurseMapper.selectById(uid);
@@ -69,7 +73,7 @@ public class Mysql读写基准测试 {
     }
 
     /** 顺序写 */
-    @Benchmark
+    //@Benchmark
     public void insertTradeRecordIncrement() {
         Long goldNum = random.nextInt(20) + 1L;
         Long uid = 1L + random.nextInt(1000000);
@@ -80,8 +84,24 @@ public class Mysql读写基准测试 {
         tradeRecordMapper.insert(record);
     }
 
-    /** 随机写 */
+    /** 顺序写 */
     @Benchmark
+    public void insertSingleTableIncrement() {
+        Long key2 = autoInc.incrementAndGet();
+        SingleTable entity = new SingleTable();
+        entity.setKey1(RandomStringUtils.randomAlphabetic(1).toLowerCase(Locale.ROOT));
+        entity.setKey2(key2.intValue());
+        entity.setKey3(RandomStringUtils.randomAlphabetic(1).toLowerCase(Locale.ROOT));
+        entity.setKeyPart1(RandomStringUtils.randomAlphabetic(1).toLowerCase(Locale.ROOT));
+        entity.setKeyPart2(RandomStringUtils.randomAlphabetic(1).toLowerCase(Locale.ROOT));
+        entity.setKeyPart3(RandomStringUtils.randomAlphabetic(1).toLowerCase(Locale.ROOT));
+        entity.setCommonField(RandomStringUtils.randomAlphabetic(3).toLowerCase(Locale.ROOT));
+        singleTableMapper.insert(entity);
+    }
+
+
+    /** 随机写 */
+    //@Benchmark
     public void insertTradeRecordRandom() {
         Long goldNum = random.nextInt(20) + 1L;
         Long uid = 1L + random.nextInt();
@@ -121,6 +141,7 @@ public class Mysql读写基准测试 {
     private UserPurseMapper userPurseMapper;
     private UserPurseService userPurseService;
     private UserTradeRecordMapper tradeRecordMapper;
+    private SingleTableMapper singleTableMapper;
 
 
 
@@ -133,6 +154,7 @@ public class Mysql读写基准测试 {
         this.userPurseMapper = context.getBean(UserPurseMapper.class);
         this.userPurseService = context.getBean(UserPurseService.class);
         this.tradeRecordMapper = context.getBean(UserTradeRecordMapper.class);
+        this.singleTableMapper = context.getBean(SingleTableMapper.class);
     }
 
     @TearDown
