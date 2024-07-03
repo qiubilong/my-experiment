@@ -72,20 +72,9 @@ public class Mysql读写基准测试 {
         userPurseMapper.decrGoldCost(uid,goldCost);
     }
 
-    /** 顺序写 */
-    //@Benchmark
-    public void insertTradeRecordIncrement() {
-        Long goldNum = random.nextInt(20) + 1L;
-        Long uid = 1L + random.nextInt(1000000);
-        String tradeNo = System.currentTimeMillis() + "#" + autoInc.incrementAndGet();
-        Date curDate = new Date();
-        UserTradeRecord record = new UserTradeRecord().setTradeNo(tradeNo).setUid(uid).setNum(goldNum).setSourceId(1)
-                .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
-        tradeRecordMapper.insert(record);
-    }
 
     /** 顺序写 */
-    @Benchmark
+    //@Benchmark
     public void insertSingleTableIncrement() {
         Long key2 = autoInc.incrementAndGet();
         SingleTable entity = new SingleTable();
@@ -99,15 +88,28 @@ public class Mysql读写基准测试 {
         singleTableMapper.insert(entity);
     }
 
+    /** 顺序写 */
+    @Benchmark
+    public void insertTradeRecordIncrement() {
+        Long goldNum = random.nextInt(20) + 1L;
+        Long uid = 1L + random.nextInt(1000000);
+        String tradeNo = System.currentTimeMillis() + "#" + autoInc.incrementAndGet();
+        Date curDate = new Date();
+        long id = Math.abs(uid) * -1;
+        UserTradeRecord record = new UserTradeRecord().setTradeNo(tradeNo).setUid(uid).setNum(goldNum).setSourceId(1)
+                .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
+        tradeRecordMapper.insert(record);
+    }
 
     /** 随机写 */
-    //@Benchmark
+    @Benchmark
     public void insertTradeRecordRandom() {
         Long goldNum = random.nextInt(20) + 1L;
         Long uid = 1L + random.nextInt();
         String tradeNo = System.currentTimeMillis() + "#" + autoInc.incrementAndGet();
         Date curDate = new Date();
-        UserTradeRecord record = new UserTradeRecord().setId(uid).setTradeNo(tradeNo).setUid(uid).setNum(goldNum).setSourceId(1)
+        long id = Math.abs(uid) * -1;
+        UserTradeRecord record = new UserTradeRecord().setId(id).setTradeNo(tradeNo).setUid(uid).setNum(goldNum).setSourceId(1)
                 .setOperateType(GOLD_DEC.getCode()).setCreateTime(curDate).setUpdateTime(curDate);
         try {
             tradeRecordMapper.insert(record);

@@ -22,7 +22,7 @@ import java.util.Date;
 @TableName("user_trade_record")
 public class UserTradeRecord {
 
-    @TableId(value = "id",type = IdType.INPUT)
+    @TableId(value = "id",type = IdType.AUTO)
     private Long id;
 
     @TableField("trade_no")
