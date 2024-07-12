@@ -55,7 +55,7 @@ logging:
   level:
     root: info
 
-
+#nacos源码启动-Dmaven.test.skip=true -Drat.skip=true
 gamewhitelist:
   channelSet:
     - media_source

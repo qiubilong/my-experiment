@@ -58,4 +58,27 @@ public class 分布式锁Redisson {
 
         });
     }
+
+    @Test
+    public void testLockTime2() {
+        String key = "testLockTime2";
+        IntStream.range(1,20).parallel().forEach(v->{
+
+            RLock lock = redissonClient.getLock(key);
+            try {
+                lock.lock( 5, TimeUnit.SECONDS);
+                log.info("lock v={} start",v);
+                try {
+                    Thread.sleep(v *1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                log.info("lock v={} end",v);
+            }finally {
+                if(lock.isHeldByCurrentThread()){
+                    lock.unlock();
+                }
+            }
+        });
+    }
 }
