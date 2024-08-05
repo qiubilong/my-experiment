@@ -95,7 +95,7 @@ public class 表达式运算 {
         }
 
         public static SymbolEnum getSymbol(char symbol) {
-            return Arrays.stream(values()).filter(e -> e.symbol == symbol).findFirst().orElseThrow();
+            return Arrays.stream(values()).filter(e -> e.symbol == symbol).findFirst().orElse(null);
         }
     }
 }

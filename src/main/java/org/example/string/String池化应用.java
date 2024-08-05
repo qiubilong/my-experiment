@@ -1,8 +1,6 @@
 package org.example.string;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
-import com.sun.tools.attach.VirtualMachine;
-import com.sun.tools.attach.VirtualMachineDescriptor;
 
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
