@@ -1,4 +1,4 @@
-package org.example.基础.线程池;
+package org.example.base.线程池;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

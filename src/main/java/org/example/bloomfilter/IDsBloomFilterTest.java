@@ -1,4 +1,4 @@
-package org.example.推荐与去重;
+package org.example.bloomfilter;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;

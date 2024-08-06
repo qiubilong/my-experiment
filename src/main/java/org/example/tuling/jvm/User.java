@@ -1,5 +1,6 @@
 package org.example.tuling.jvm;
 
+
 import lombok.Data;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class User {
-    private Long uid;
+    private Long id;
     private String name;
+
 }

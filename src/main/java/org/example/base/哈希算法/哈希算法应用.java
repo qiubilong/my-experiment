@@ -1,4 +1,4 @@
-package org.example.基础.哈希算法;
+package org.example.base.哈希算法;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;

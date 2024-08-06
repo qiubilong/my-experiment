@@ -1,4 +1,4 @@
-package org.example.推荐与去重;
+package org.example.bloomfilter;
 
 import org.redisson.Redisson;
 import org.redisson.api.RBloomFilter;

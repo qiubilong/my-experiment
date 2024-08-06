@@ -1,11 +1,10 @@
-package org.example.推荐与去重;
+package org.example.bloomfilter;
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public class BloomFilterGuavaTest {
 

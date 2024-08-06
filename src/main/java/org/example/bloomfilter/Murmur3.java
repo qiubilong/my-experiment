@@ -1,4 +1,4 @@
-package org.example.推荐与去重;
+package org.example.bloomfilter;
 
 public class Murmur3 {
     // from 64-bit linear congruential generator

@@ -1,4 +1,4 @@
-package org.example.性能测试;
+package org.example.jmh;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;

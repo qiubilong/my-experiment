@@ -1,4 +1,4 @@
-package org.example.基础;
+package org.example.base;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;

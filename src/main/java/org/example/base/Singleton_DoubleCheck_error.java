@@ -1,4 +1,4 @@
-package org.example.基础;
+package org.example.base;
 
 /** 懒汉式，按需加载
  *

@@ -1,4 +1,4 @@
-package org.example.基础.异常;
+package org.example.base.异常;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
