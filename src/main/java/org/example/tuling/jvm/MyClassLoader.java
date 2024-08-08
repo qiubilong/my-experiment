@@ -99,7 +99,7 @@ public class MyClassLoader extends ClassLoader{
         Object invoke1 = method1.invoke(instance1, null);
         System.out.println(aClass1.getClassLoader() +"---load Math1 class---" +aClass1.hashCode());
 
-        //JVM内同包同名的类对象可以同时存在，只有它们的类加载器不同，这样就可以做到不同版本隔离和热部署
+        /** JVM可以以同时存在 同包同名 的类对象，因为它们的类加载器不同，这样就可以做到不同版本隔离和热部署*/
 
     }
 }
