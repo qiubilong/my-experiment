@@ -8,7 +8,7 @@ public class MyByteCode {
 
     private int i = 0;
 
-    private User user;
+    private User user1;
 
     private static  User empty = new User();
 
@@ -17,6 +17,11 @@ public class MyByteCode {
 
     public void updateUserName(){
         String name = "ahahahahha";
+    }
+
+
+    public Integer updateUserName(String name){
+        return 1;
     }
 
     public void updateUser(User user){

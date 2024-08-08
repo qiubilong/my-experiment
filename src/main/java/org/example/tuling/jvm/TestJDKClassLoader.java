@@ -8,7 +8,6 @@ public class TestJDKClassLoader {
 
     public static void main(String[] args) {
 
-        new String();
         System.out.println(String.class.getClassLoader());
         System.out.println(com.sun.crypto.provider.DESKeyFactory.class.getClassLoader().getClass().getName());
         System.out.println(TestJDKClassLoader.class.getClassLoader().getClass().getName());
@@ -21,6 +20,7 @@ public class TestJDKClassLoader {
         System.out.println("the extClassloader : " + extClassloader);
         System.out.println("the appClassLoader : " + appClassLoader);
 
+        // System.getProperty("sun.boot.class.path")
         System.out.println();
         System.out.println("bootstrapLoader加载以下文件：");
         URL[] urls = Launcher.getBootstrapClassPath().getURLs();
@@ -35,6 +35,7 @@ public class TestJDKClassLoader {
         System.out.println();
         System.out.println("appClassLoader加载以下文件：");
         System.out.println(System.getProperty("java.class.path"));
+
 
     }
 }
