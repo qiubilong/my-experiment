@@ -12,4 +12,8 @@ public class User {
     private Long id;
     private String name;
 
+    public void sout(){
+        System.out.println("");
+    }
+
 }

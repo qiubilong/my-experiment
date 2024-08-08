@@ -8,6 +8,7 @@ public class Math {
         int a = 1;
         int b = 2;
         int c = (a + b) * 10;
+        System.out.println("调用Math.compute="+c);
         return c;
     }
 
