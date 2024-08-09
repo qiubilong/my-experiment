@@ -1,15 +1,19 @@
 package org.example.web.service;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.CacheLoader;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.*;
+import com.github.benmanes.caffeine.cache.stats.CacheStats;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.example.web.dao.entity.UserPurse;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,8 +27,14 @@ public class JvmCacheService {
     private final UserPurseService userPurseService;
 
     private Cache<Long, UserPurse> medalConfigCache = Caffeine.newBuilder()
-            .expireAfterWrite(10, TimeUnit.SECONDS)
-            .initialCapacity(10).build();
+            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .initialCapacity(10).maximumSize(10).recordStats().removalListener(new RemovalListener(){
+
+                @Override
+                public void onRemoval(@Nullable Object key, @Nullable Object value, @NonNull RemovalCause cause) {
+                    log.info("JvmCacheService onRemoval={},cause={}",key,cause);
+                }
+            }).build();
 
 
     public UserPurse queryUserPurse(Long uid){
@@ -50,5 +60,27 @@ public class JvmCacheService {
             }
             return userPurse;
         });
+    }
+
+    /** 批量回源 */
+    public Map<Long, UserPurse> queryUsers(List<Long> uids){
+        @NonNull Map<Long, UserPurse> datas = medalConfigCache.getAll(uids, missUids -> {
+            log.info("queryUsers misses={}",missUids);
+            Map<Long, UserPurse> users = new HashMap<>();
+            for (Long missUid : missUids) {
+                UserPurse userPurse = new UserPurse();
+                userPurse.setUid(missUid);
+                userPurse.setCreateTime(new Date());
+
+                users.put(missUid,userPurse);
+            }
+
+            return users;
+        });
+        return datas;
+    }
+
+    public CacheStats getCacheStatis(){
+        return medalConfigCache.stats();
     }
 }
