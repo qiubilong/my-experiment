@@ -24,8 +24,9 @@ public class UserController {
         for (User user: users) {
             //TODO 业务处理
             //System.out.println("user:" + user.toString());
-            Thread.sleep(10);
         }
+        Thread.sleep(20);
+
         return "end";
     }
 

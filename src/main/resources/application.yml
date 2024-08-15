@@ -8,7 +8,7 @@ server:
     direct-buffers: true
   tomcat:
     threads:
-      max: 8
+      max: 500
 
 dubbo:
   application:
