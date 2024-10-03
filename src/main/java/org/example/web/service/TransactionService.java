@@ -188,7 +188,7 @@ public class TransactionService implements ApplicationContextAware {
         userPurseService.decrUserGoldNew(uid,goldNum);
 
         if(tradeNo %2 == 1){
-            throw new RuntimeException();
+            throw new RuntimeException();//2、两个事务范围不同，会导致事务不能一起回滚
         }
     }
 
