@@ -8,7 +8,7 @@ server:
     direct-buffers: true
   tomcat:
     threads:
-      max: 8
+      max: 500
 
 dubbo:
   application:
@@ -24,7 +24,7 @@ dubbo:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/experiment?useSSL=false&autoReconnect=true&characterEncoding=utf8
+    url: jdbc:mysql://localhost:3306/experiment?useSSL=false&autoReconnect=true&characterEncoding=utf8&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456

@@ -102,6 +102,7 @@ public class BatchInsertOrUpdateTest {
         log.info("testBatchInsertValues cost={}",cost);
     }
 
+    /* executeBatchInternal执行批量提交时，如果没有 rewriteBatchedStatements=true，则会一行一行提交 */
     @Test
     public void testBatchInsertInSession(){
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
@@ -114,8 +115,7 @@ public class BatchInsertOrUpdateTest {
             for (User user : users) {
                 mapper.insert(user);
             }
-            sqlSession.commit();
-            sqlSession.clearCache();
+            sqlSession.commit(); /* StatementImpl.executeBatch() --> ClientPreparedStatement.executeBatchInternal() */
         }
         log.info("testBatchInsertInSession cost={}",( System.currentTimeMillis() - start));
         sqlSession.close();

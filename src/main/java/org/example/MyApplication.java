@@ -15,3 +15,7 @@ public class MyApplication {
     }
 
 }
+
+/**
+ * -Xms1500M -Xmx1500M -Xss256k -XX:SurvivorRatio=6 -XX:MetaspaceSize=256M -XX:MaxMetaspaceSize=256M -XX:+UseConcMarkSweepGC -XX:+UseParNewGC
+ */
