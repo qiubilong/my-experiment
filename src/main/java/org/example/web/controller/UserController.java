@@ -41,4 +41,10 @@ public class UserController {
         }
         return users;
     }
+
+    @RequestMapping("/queryUserInfo")
+    public User queryUserInfo() throws InterruptedException {
+        Thread.sleep(200L);//模拟业务
+        return new User(111L,"ddd");
+    }
 }
