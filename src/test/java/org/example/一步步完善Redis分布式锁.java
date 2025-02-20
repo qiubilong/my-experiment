@@ -31,7 +31,14 @@ public class 一步步完善Redis分布式锁 {
 
 
 
-
+    /*
+    *  还有不足：
+    *  1、不能等待加锁 --> redisson解决
+    *  2、业务未结束，锁过期  --> redisson看门狗自动续约
+    *  3、redis主从切换，锁过期 -- redis是AP架构，redisson红锁（多个redis实例）也无法解决
+    *         --> 3.1 使用强一致架构，如zookeeper
+    *         --> 3.2 只有redis主节点
+    * */
     @Test
     public void lock4() {
         /* setnx加锁、过期时间是原子操作 */
@@ -48,13 +55,14 @@ public class 一步步完善Redis分布式锁 {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            /* 使用lua脚本，实现删除锁的原子命令*/
-            redis.eval("if(redis.call('get',KEYS[1]) == ARGV[1]) then\n" +
+            /* 使用lua脚本，实现删除锁的原子命令，防止删除别人的锁*/
+            Object eval = redis.eval("if(redis.call('get',KEYS[1]) == ARGV[1]) then\n" +
                     "  redis.call('del',KEYS[1]);\n" +
                     "  return 1;\n" +
                     "end;\n" +
                     "\n" +
-                    "return nil;", ScriptOutputType.BOOLEAN,new String[]{lockKey},lockVal);
+                    "return nil;", ScriptOutputType.BOOLEAN, new String[]{lockKey}, lockVal);
+            log.info("del lock eval={}",eval);
         }
     }
 
@@ -120,7 +128,7 @@ public class 一步步完善Redis分布式锁 {
     public void doTaskInner(){
 
         try {
-            Thread.sleep(200);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
