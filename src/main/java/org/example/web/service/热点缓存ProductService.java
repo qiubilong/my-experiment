@@ -90,6 +90,8 @@ public class 热点缓存ProductService {
             int expireSec = EXPIRE_SEC;
             if(product.getId() ==null){
                 expireSec = 30 * 60;//空值缓存时间少
+            }else {
+                productsCache.put(productId,product);
             }
             expireSec += new Random().nextInt(10) * 60 ;
             redis.expire(keyCache,Duration.ofSeconds(expireSec));
