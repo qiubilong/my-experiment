@@ -8,9 +8,9 @@ import com.github.benmanes.caffeine.cache.RemovalListener;
 import io.lettuce.core.SetArgs;
 import io.lettuce.core.api.sync.RedisCommands;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.Service;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.example.web.dao.entity.Product;
 import org.example.web.dao.mapper.ProductMapper;
@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Random;
@@ -28,13 +29,13 @@ import java.util.concurrent.TimeUnit;
  * @since 2025/2/19
  */
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class 热点缓存ProductService {
 
     private final static int EXPIRE_SEC = 24 * 60 *60;
 
-    private final Product PRODUCT_EMPTY = new Product();
+    private final static Product PRODUCT_EMPTY = new Product();
 
     private final RedisCommands<String, String> redis;
 

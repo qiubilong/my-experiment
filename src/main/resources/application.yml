@@ -39,6 +39,11 @@ spring:
         min-idle: 10
         max-active: 100
         max-wait: 1000
+
+  data:
+    mongodb:
+      uri: mongodb://192.168.229.130:27017/appdb
+
   datasource:
     url: jdbc:mysql://localhost:3306/experiment?useSSL=false&autoReconnect=true&characterEncoding=utf8&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
