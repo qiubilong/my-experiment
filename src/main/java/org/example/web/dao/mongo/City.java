@@ -7,22 +7,27 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.Date;
+import java.util.List;
 
-@Document("empaaaa")  //对应emp集合中的一个文档
+/**
+ * @author chenxuegui
+ * @since 2025/2/25
+ */
+@Document("citys")  //对应emp集合中的一个文档
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Employee {
+public class City {
 
     @Id   //映射文档中的_id
     private Integer id;
-    @Field("username")
-    private String name;
     @Field
-    private int age;
+    private String city;
     @Field
-    private Double salary;
+    private int pop;
     @Field
-    private Date entryDay;
+    private List<Double> loc;
+
+    @Field
+    private String state;
 }

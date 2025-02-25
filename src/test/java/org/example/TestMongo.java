@@ -3,21 +3,20 @@ package org.example;
 import com.google.common.collect.Lists;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
+import org.example.web.dao.mongo.City;
 import org.example.web.dao.mongo.Employee;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author chenxuegui
@@ -31,10 +30,79 @@ public class TestMongo {
     private MongoTemplate mongoTemplate;
 
 
+    @Test //人口超过1000万的州
+    public void testAggregation1(){
+        //$group
+        GroupOperation groupOperation = Aggregation.group("state").sum("pop").as("totalPop");
+        //$match
+        MatchOperation matchOperation = Aggregation.match(Criteria.where("totalPop").gte(10*1000*1000));
+
+        // 按顺序组合每一个聚合步骤
+        TypedAggregation<City> typedAggregation = Aggregation.newAggregation(City.class, groupOperation, matchOperation);
+
+        //执行聚合操作,如果不使用 Map，也可以使用自定义的实体类来接收数据
+        AggregationResults<Map> aggregationResults = mongoTemplate.aggregate(typedAggregation, Map.class);
+        // 取出最终结果
+        List<Map> mappedResults = aggregationResults.getMappedResults();
+        for(Map map:mappedResults){
+            System.out.println(map);
+        }
+
+    }
+
+    @Test
+    public void testAggregation(){
+        //$group
+        GroupOperation groupOperation = Aggregation.group("state","city").sum("pop").as("pop");
+
+        //$sort
+        SortOperation sortOperation = Aggregation.sort(Sort.Direction.ASC,"pop");
+
+        //$group
+        GroupOperation groupOperation2 = Aggregation
+                .group("_id.state")
+                .last("_id.city").as("biggestCity")
+                .last("pop").as("biggestPop")
+                .first("_id.city").as("smallestCity")
+                .first("pop").as("smallestPop");
+
+        //$project
+        ProjectionOperation projectionOperation = Aggregation
+                .project("state","biggestCity","smallestCity")
+                .and("_id").as("state")
+                .andExpression(
+                        "{ name: \"$biggestCity\",  pop: \"$biggestPop\" }")
+                .as("biggestCity")
+                .andExpression(
+                        "{ name: \"$smallestCity\", pop: \"$smallestPop\" }"
+                ).as("smallestCity")
+                .andExclude("_id");
+
+        //$sort
+        SortOperation sortOperation2 = Aggregation.sort(Sort.Direction.ASC,"state");
+
+
+        // 按顺序组合每一个聚合步骤
+        TypedAggregation<City> typedAggregation = Aggregation.newAggregation(City.class, groupOperation, sortOperation, groupOperation2,
+                projectionOperation,sortOperation2);
+
+        //执行聚合操作,如果不使用 Map，也可以使用自定义的实体类来接收数据
+        AggregationResults<Map> aggregationResults = mongoTemplate.aggregate(typedAggregation, Map.class);
+        // 取出最终结果
+        List<Map> mappedResults = aggregationResults.getMappedResults();
+        for(Map map:mappedResults){
+            System.out.println(map);
+        }
+
+    }
+
+
     @Test
     public void testInsert(){
         Date now = new Date();
         Employee employee = new Employee(1, "小明", 30,10000.00, now);
+
+        //mongoTemplate.insert(Employee.class).one(employee);
 
         //添加文档
         // sava:  _id存在时更新数据
@@ -51,7 +119,6 @@ public class TestMongo {
                 new Employee(7, "赵六",28, 12000.00, now));
         //插入多条数据
         Collection<Employee> insert = mongoTemplate.insert(list, Employee.class);
-
     }
 
     @Test
@@ -66,7 +133,6 @@ public class TestMongo {
         //根据_id查询
         Employee e = mongoTemplate.findById(1, Employee.class);
         System.out.println(e);
-
 
 
         System.out.println("==========findOne返回第一个文档===========");
@@ -158,6 +224,5 @@ public class TestMongo {
         //条件删除
         Query query = new Query(Criteria.where("salary").gte(10000));
         mongoTemplate.remove(query,Employee.class);
-
     }
 }
