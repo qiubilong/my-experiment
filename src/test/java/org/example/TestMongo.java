@@ -50,32 +50,49 @@ public class TestMongo {
 
     }
 
+    @Test //各州平均人口
+    public void testAggregation2(){
+        //$group -- 州城市分组求和
+        GroupOperation groupOperation = Aggregation.group("state","city").sum("pop").as("cityPop");
+        //$group -- 州-求平均
+        GroupOperation groupOperation2 = Aggregation.group("_id.state").avg("cityPop").as("avgCityPop");
+        //$sort - 降序
+        SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"avgCityPop");
+
+        // 按顺序组合每一个聚合步骤
+        TypedAggregation<City> typedAggregation = Aggregation.newAggregation(City.class, groupOperation, groupOperation2,sortOperation);
+
+        //执行聚合操作,如果不使用 Map，也可以使用自定义的实体类来接收数据
+        AggregationResults<Map> aggregationResults = mongoTemplate.aggregate(typedAggregation, Map.class);
+        // 取出最终结果
+        List<Map> mappedResults = aggregationResults.getMappedResults();
+        for(Map map:mappedResults){
+            System.out.println(map);
+        }
+    }
+
     @Test
     public void testAggregation(){
-        //$group
+        //$group -- 州城市分组求和
         GroupOperation groupOperation = Aggregation.group("state","city").sum("pop").as("pop");
 
-        //$sort
+        //$sort - 降序
         SortOperation sortOperation = Aggregation.sort(Sort.Direction.ASC,"pop");
 
         //$group
         GroupOperation groupOperation2 = Aggregation
                 .group("_id.state")
-                .last("_id.city").as("biggestCity")
+                .last("_id.city").as("biggestCity") //最大
                 .last("pop").as("biggestPop")
-                .first("_id.city").as("smallestCity")
+                .first("_id.city").as("smallestCity")//最小
                 .first("pop").as("smallestPop");
 
-        //$project
+        //$project - 别名
         ProjectionOperation projectionOperation = Aggregation
                 .project("state","biggestCity","smallestCity")
                 .and("_id").as("state")
-                .andExpression(
-                        "{ name: \"$biggestCity\",  pop: \"$biggestPop\" }")
-                .as("biggestCity")
-                .andExpression(
-                        "{ name: \"$smallestCity\", pop: \"$smallestPop\" }"
-                ).as("smallestCity")
+                .andExpression("{ name: \"$biggestCity\",  pop: \"$biggestPop\" }").as("biggestCity")
+                .andExpression("{ name: \"$smallestCity\", pop: \"$smallestPop\" }").as("smallestCity")
                 .andExclude("_id");
 
         //$sort

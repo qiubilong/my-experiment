@@ -21,13 +21,17 @@ public class City {
 
     @Id   //映射文档中的_id
     private Integer id;
-    @Field
-    private String city;
-    @Field
-    private int pop;
-    @Field
-    private List<Double> loc;
 
     @Field
-    private String state;
+    private String state; //州
+
+    @Field
+    private String city;//城市
+
+    @Field
+    private int pop; //人口
+
+    @Field
+    private List<Double> loc; //城市某地方
+
 }
