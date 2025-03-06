@@ -44,11 +44,27 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
+
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+
+        <!--mybatis增强-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.3</version>
+            <version>3.4.3.4</version>
         </dependency>
+
+        <!--baomidou 动态数据源-->
+     <!--   <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>3.5.0</version>
+        </dependency>-->
 
         <dependency>
             <groupId>com.baomidou</groupId>

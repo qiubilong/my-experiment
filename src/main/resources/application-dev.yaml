@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    #使用baomidou动态数据源dynamicDatasource框架
+    dynamic:
+      #设置默认的数据源或者数据源组
+      primary: write
+      #严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      strict: false
+      datasource:
+        write:
+          url: jdbc:mysql://192.168.229.132:3306/app?serverTimezone=UTC
+          username: root
+          password: 123456
+          initial-size: 1
+          min-idle: 1
+          max-active: 20
+          test-on-borrow: true
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        read:
+          url: jdbc:mysql://192.168.229.130:3306/app?serverTimezone=UTC
+          username: root
+          password: 123456
+          initial-size: 1
+          min-idle: 1
+          max-active: 20
+          test-on-borrow: true
+          driver-class-name: com.mysql.cj.jdbc.Driver
