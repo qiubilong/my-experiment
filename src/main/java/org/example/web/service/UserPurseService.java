@@ -6,7 +6,6 @@ import io.lettuce.core.api.sync.RedisCommands;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.Service;
 import org.example.web.common.BizServiceException;
 import org.example.web.common.ResultCode;
 import org.example.web.dao.entity.UserPurse;
@@ -18,6 +17,7 @@ import org.joda.time.DateTime;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 

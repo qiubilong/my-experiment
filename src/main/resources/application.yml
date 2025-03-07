@@ -10,16 +10,16 @@ server:
     threads:
       max: 2000
 
-dubbo:
-  application:
-    name: my-experiment-server
-  protocol:
-    name: dubbo
-    port: 20880
-  registry:
-    address: N/A
-  provider:
-    threads: 32
+#dubbo:
+#  application:
+#    name: my-experiment-server
+#  protocol:
+#    name: dubbo
+#    port: 20880
+#  registry:
+#    address: N/A
+#  provider:
+#    threads: 32
 
 
 spring:
