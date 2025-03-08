@@ -6,18 +6,18 @@ import io.lettuce.core.api.sync.RedisCommands;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.Service;
 import org.example.web.common.BizServiceException;
 import org.example.web.common.ResultCode;
 import org.example.web.dao.entity.UserPurse;
 import org.example.web.dao.entity.UserTradeRecord;
 import org.example.web.dao.mapper.UserPurseMapper;
 import org.example.web.dao.mapper.UserTradeRecordMapper;
-import org.example.web.rpc.IUserPurseService;
+import org.example.web.rpc.IDubboUserPurseService;
 import org.joda.time.DateTime;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ import static org.example.web.dao.entity.UserTradeRecord.OperateType.GOLD_DEC;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class UserPurseService implements IUserPurseService {
+public class UserPurseService implements IDubboUserPurseService {
     private final UserPurseMapper userPurseMapper;
     private final UserTradeRecordMapper tradeRecordMapper;
 

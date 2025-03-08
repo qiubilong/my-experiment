@@ -12,7 +12,7 @@ public class User {
     private Long id;
     private String name;
 
-    byte[] a = new byte[1024*100];
+    //byte[] a = new byte[1024*100];
 
     public User() {
     }
