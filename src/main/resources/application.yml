@@ -24,7 +24,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: dev,cosid
   redis:
     database: 0
     host: 127.0.0.1
