@@ -24,17 +24,22 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations=3,time = 30, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 public class InterProcessMutex基准测试 {
-    static CuratorFramework zookeeper = CuratorFrameworkFactory.newClient("192.168.229.130:2181,192.168.229.132:2181", 30000, 10000,
-            new ExponentialBackoffRetry(1000, 1));
-    InterProcessMutex oneMutex = new InterProcessMutex(zookeeper,"/oneInterProcessMutex");
 
+    InterProcessMutex oneMutex;
+    CuratorFramework zookeeper;
+
+    @Setup
+    public void init() {
+        System.setProperty("zookeeper.sasl.client", "false");/* ZooKeeper 客户端默认尝试 SASL（安全认证）连接，导致连接很慢*/
+
+        zookeeper = CuratorFrameworkFactory.newClient("192.168.229.130:2181,192.168.229.132:2181", 30000, 10000,
+                new ExponentialBackoffRetry(1000, 1));
+        oneMutex = new InterProcessMutex(zookeeper,"/oneInterProcessMutex");
+
+        zookeeper.start();
+    }
 
     public static void main(String[] args) throws Exception{
-        System.setProperty("zookeeper.sasl.client", "false");/* ZooKeeper 客户端默认尝试 SASL（安全认证）连接，导致连接很慢*/
-        zookeeper.start();
-
-        Thread.sleep(5);
-
         Options opt = new OptionsBuilder().include(InterProcessMutex基准测试.class.getSimpleName())
                 .threads(8)
                 .jvmArgs( "-Xms1G", "-Xmx1G")

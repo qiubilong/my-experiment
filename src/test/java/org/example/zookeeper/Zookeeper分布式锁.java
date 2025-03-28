@@ -57,13 +57,14 @@ public class Zookeeper分布式锁 {
         Thread.sleep(50);
     }
 
+    static int total = 0;
     public static void main(String[] args) throws Exception {
 
         Zookeeper分布式锁 zookeeper分布式锁 = new Zookeeper分布式锁();
         zookeeper分布式锁.initLock();
 
         //闭锁，模拟30个并发
-        int count = 30;
+        int count = 100;
         CountDownLatch countDownLatch = new CountDownLatch(count);
         for (int i = 0; i < count; i++) {
             new Thread(new Runnable() {
@@ -72,7 +73,9 @@ public class Zookeeper分布式锁 {
                     zookeeper分布式锁.lock();
                     log.info("获得锁成功");
                     try {
-                        log.info("生成订单id={}",getOrderCode());
+                        for (int j = 0; j < 5; j++) {
+                            total ++;
+                        }
                     }finally {
                         log.info("释放锁");
                         zookeeper分布式锁.unlock();
@@ -83,7 +86,7 @@ public class Zookeeper分布式锁 {
         }
         countDownLatch.await();
 
-        Thread.currentThread().join();
+        System.out.println(total);
     }
 
     public void lock(){
@@ -101,7 +104,6 @@ public class Zookeeper分布式锁 {
             zookeeper.create().withMode(CreateMode.EPHEMERAL).forPath(LOCK_PATH, "xxx".getBytes(StandardCharsets.UTF_8));
             return true;
         } catch (Exception e) {
-            //e.printStackTrace();
         }
         return false;
     }
@@ -113,13 +115,5 @@ public class Zookeeper分布式锁 {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    private static int count = 0;
-    /** 生成订单号*/
-    public static String getOrderCode(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
-        return simpleDateFormat.format(new Date()) + "-" + ++count;
     }
 }
