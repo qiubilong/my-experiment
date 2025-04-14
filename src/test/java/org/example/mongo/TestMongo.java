@@ -1,4 +1,4 @@
-package org.example;
+package org.example.mongo;
 
 import com.google.common.collect.Lists;
 import com.mongodb.client.result.UpdateResult;

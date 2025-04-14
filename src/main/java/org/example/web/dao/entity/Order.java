@@ -21,4 +21,13 @@ public class Order {
 
     @TableField("order_id")
     private Long orderId;
+
+    public Order() {
+    }
+
+
+    public Order(Long uid, Long orderId) {
+        this.uid = uid;
+        this.orderId = orderId;
+    }
 }

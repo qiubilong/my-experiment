@@ -1,18 +1,24 @@
-package org.example;
+package org.example.mongo;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.util.Lists;
 import org.example.web.dao.mongo.LanguageBR;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @author chenxuegui
@@ -31,6 +37,65 @@ public class TestMongoLang {
 
     private static AtomicInteger count = new AtomicInteger(0);
 
+   static String rootPath = "C:\\git";
+
+    @Test
+    public void doLangUpdate(){
+        String appName = "C:\\git\\overseas-activities";
+        File rootFile = new File(appName);
+        File[] listFiles = rootFile.listFiles();
+        if(listFiles == null){
+            return;
+        }
+        for (File appFile : listFiles) {
+            if(shouldSkip(appFile)){
+                continue;
+            }
+            String langPath = appFile.getAbsolutePath() +"\\src\\main\\resources\\i18n\\messages.properties";
+            String langPathTo = appFile.getAbsolutePath() +"\\src\\main\\resources\\i18n\\messages_pt_BR.properties";
+            System.out.println(langPath);
+            try {
+                List<String> keys = new ArrayList<>(200);
+                Files.lines(Paths.get(langPath)).forEach(message->{
+                    //System.out.println(message);
+                    Pair<String, String> keyValuePair = pairKeyValue(message);
+                    if(keyValuePair != null){
+                        keys.add(keyValuePair.getKey());
+                    }
+                });
+                if (!keys.isEmpty()) {
+                    FileWriter fileTo = new FileWriter (langPathTo,false);
+                    Map<String, LanguageBR> messageLangFromDb = getMessageLangFromDb(keys);
+                    for (String key : keys) {
+                        LanguageBR languageBR = messageLangFromDb.get(key);
+                        if(languageBR ==null){
+                            continue;
+                        }
+                        String line = key +"=" + languageBR.getPt_BR()+"\n";
+                        fileTo.write(line);
+                    }
+                    fileTo.flush();
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Map<String,LanguageBR> getMessageLangFromDb(List<String> keys){
+        Criteria cri = Criteria.where("key").in(keys);
+        List<LanguageBR> languageBRS = mongoTemplate.find(new Query().addCriteria(cri), LanguageBR.class,"LanguageBR2");
+        return languageBRS.stream().collect(Collectors.toMap(LanguageBR::getKey, v->v));
+    }
+
+    public Pair<String,String> pairKeyValue(String message){
+        String[] split = message.split("=");
+        if(split.length<2){
+            return null;
+        }
+        return Pair.of(split[0],split[1]);
+    }
 
     @Test
     public void collectAllKeysMain(){
