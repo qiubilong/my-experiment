@@ -5,6 +5,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -33,7 +34,7 @@ public class ChatServer_Proto {
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
 
-
+                    pipeline.addLast("decoder",new FixedLengthFrameDecoder(10240));
                     pipeline.addLast("serverHandler_Proto",new ChatServerHandler_Proto());
                 }
             });

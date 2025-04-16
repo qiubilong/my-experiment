@@ -7,6 +7,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.example.netty.netty.vo.UserMessage;
 import org.example.netty.tuling.netty.codec.ProtostuffUtil;
@@ -36,6 +37,7 @@ public class ChatClient_批量_Proto {
 
                     ChannelPipeline pipeline = ch.pipeline();
 
+                    pipeline.addLast("encoder",new FixedLengthFrameDecoder(10240));
                     pipeline.addLast("clientHandler_Proto",new ChatClientHandler_Proto());
                 }
             });
