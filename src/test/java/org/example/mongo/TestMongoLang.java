@@ -41,7 +41,7 @@ public class TestMongoLang {
 
     @Test
     public void doLangUpdate(){
-        String appName = "C:\\git\\overseas-activities";
+        String appName = "C:\\git\\overseaslive\\overseas-mall";
         File rootFile = new File(appName);
         File[] listFiles = rootFile.listFiles();
         if(listFiles == null){
@@ -63,6 +63,9 @@ public class TestMongoLang {
                         keys.add(keyValuePair.getKey());
                     }
                 });
+
+
+
                 if (!keys.isEmpty()) {
                     FileWriter fileTo = new FileWriter (langPathTo,false);
                     Map<String, LanguageBR> messageLangFromDb = getMessageLangFromDb(keys);
@@ -187,7 +190,7 @@ public class TestMongoLang {
         }
 
         if(file.getName().contains("gateway")){
-            return true;
+           // return true;
         }
 
         if((file.getName().endsWith("biz") || file.getName().endsWith("home")|| file.getName().endsWith("process"))){
