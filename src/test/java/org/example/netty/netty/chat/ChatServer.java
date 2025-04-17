@@ -5,9 +5,12 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.example.netty.netty.codec.RpcMessageDecoder;
 import org.example.netty.netty.codec.RpcMessageEncoder;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author chenxuegui
@@ -39,6 +42,7 @@ public class ChatServer {
                     pipeline.addLast("RpcMessageEncoder",new RpcMessageEncoder());
 
                     // inBound - TCP字节流解码
+                    pipeline.addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS));//心跳保活检查，下一个Handler必须实现userEventTriggered
                     pipeline.addLast("RpcMessageDecoder",new RpcMessageDecoder());
                     pipeline.addLast("ChatServerHandler",new ChatServerHandler());
                 }

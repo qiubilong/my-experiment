@@ -33,6 +33,7 @@ public class ChatClientHandler extends SimpleChannelInboundHandler<RpcMessage> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
         log.info("客户端["+channel.localAddress()+"]断开连接");
+        channel.close();
     }
 
     @Override

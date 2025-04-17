@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.netty.netty.common.RpcMessage;
@@ -19,12 +20,12 @@ import org.example.netty.tuling.netty.codec.ProtostuffUtil;
 @Slf4j
 public class ChatServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
 
+
     static ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     @Override /* channelRead()ByteBuf消息参数  -->  channelRead0()泛型消息参数    */
     protected void channelRead0(ChannelHandlerContext ctx, RpcMessage rpcMessage) throws Exception {
         Channel channel = ctx.channel();
-
         UserMessage userMessage = ProtostuffUtil.deserializer(rpcMessage.getContent(), UserMessage.class);
         log.info("客户端["+channel.remoteAddress()+"]发送消息 ："+ userMessage);
 
@@ -54,7 +55,7 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        log.info("收到客户端["+channel.remoteAddress()+"]断开连接");
+        log.info("客户端["+channel.remoteAddress()+"]断开连接");
         channelGroup.remove(channel);
 
         for (Channel channelClient : channelGroup) {
@@ -67,4 +68,6 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
         cause.printStackTrace();
         ctx.channel().close();
     }
+
+
 }
