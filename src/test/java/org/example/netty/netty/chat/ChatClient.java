@@ -21,9 +21,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ChatClient {
 
+    private int reConnectTries = 0;
+    private int reConnectBaseSec = 5;
+
+
     Bootstrap bootstrap;
     NioEventLoopGroup work;
     Channel channel;
+
 
     public ChatClient() {
         work = new NioEventLoopGroup();
@@ -35,7 +40,7 @@ public class ChatClient {
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
+            protected void initChannel(SocketChannel ch) throws Exception { //建立连接后，初始化该通道的handler处理链
 
                 ChannelPipeline pipeline = ch.pipeline();
 
@@ -50,28 +55,18 @@ public class ChatClient {
     }
 
     public Channel connect() throws Exception {
-        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                ChannelPipeline pipeline = ch.pipeline();
-
-                //outBound - 对象转字节流
-                pipeline.addLast("RpcMessageEncoder", new RpcMessageEncoder());
-
-                // inBound - TCP字节流解码
-                pipeline.addLast("RpcMessageDecoder", new RpcMessageDecoder());
-                pipeline.addLast("ChatClientHandler", new ChatClientHandler());
-            }
-        });
+        log.info("connect server...");
         ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 9000);
         channelFuture.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
                 if(channelFuture.isSuccess()){
+                    reConnectTries = 0;
                     log.info("连接服务器成功");
-                    doKeepAlive();
+                    doKeepAlive();//心跳保活
                 }else {
                     log.info("连接服务器失败");
+                    doReConnect();//失败重连
                 }
             }
         });
@@ -89,6 +84,25 @@ public class ChatClient {
 
         },30, TimeUnit.SECONDS);
 
+    }
+
+
+    public void doReConnect(){//客户端重连
+        if(reConnectTries <3){
+            reConnectTries++;
+            int delay = Math.min(reConnectBaseSec + reConnectTries * 2,30);
+            log.info("doReConnect reConnectTries={},delay={}",reConnectTries,delay);
+            work.schedule(() -> {
+                if(channel == null || !channel.isActive()){
+                    try {
+                        connect();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            },delay,TimeUnit.SECONDS);
+        }
     }
 
     public void close() throws InterruptedException {

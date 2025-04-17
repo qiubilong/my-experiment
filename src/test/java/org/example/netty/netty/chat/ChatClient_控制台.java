@@ -19,11 +19,9 @@ public class ChatClient_控制台 {
         Channel channel = chatClient.connect();
 
         Scanner scanner = new Scanner(System.in);
-        while (true) {
+        while (channel.isActive()) {
             String line = scanner.nextLine();
-            if(channel.isActive()){
-                RpcMessageUtil.writeAndFlush(channel,line);
-            }
+            RpcMessageUtil.writeAndFlush(channel,line);
         }
     }
 }

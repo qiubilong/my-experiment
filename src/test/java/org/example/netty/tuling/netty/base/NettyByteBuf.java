@@ -7,6 +7,7 @@ import io.netty.util.CharsetUtil;
 public class NettyByteBuf {
     public static void main(String[] args) {
         // 创建byteBuf对象，该对象内部包含一个字节数组byte[10]
+
         // 通过readerindex和writerIndex和capacity，将buffer分成三个区域
         // 已经读取的区域：[0,readerindex)
         // 可读取的区域：[readerindex,writerIndex)
