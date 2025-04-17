@@ -34,7 +34,6 @@ public class ChatServer_Proto {
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
 
-                    pipeline.addLast("decoder",new FixedLengthFrameDecoder(10240));
                     pipeline.addLast("serverHandler_Proto",new ChatServerHandler_Proto());
                 }
             });

@@ -5,9 +5,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.example.netty.netty.vo.UserMessage;
+import org.example.netty.netty.common.UserMessage;
 import org.example.netty.tuling.netty.codec.ProtostuffUtil;
 
 /**

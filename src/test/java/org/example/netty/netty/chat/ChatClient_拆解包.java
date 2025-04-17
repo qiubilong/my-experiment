@@ -8,6 +8,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.example.netty.netty.codec.RpcMessageDecoder;
+import org.example.netty.netty.codec.RpcMessageEncoder;
+import org.example.netty.netty.common.RpcMessageUtil;
 
 
 /**
@@ -34,18 +37,22 @@ public class ChatClient_拆解包 {
 
                     ChannelPipeline pipeline = ch.pipeline();
 
-                    pipeline.addLast("encoder",new StringEncoder());
-                    pipeline.addLast("decoder",new StringDecoder());
-                    pipeline.addLast("clientHandler",new ChatClientHandler());
+                    //outBound - 对象转字节流
+                    pipeline.addLast("RpcMessageEncoder",new RpcMessageEncoder());
+
+                    // inBound - TCP字节流解码
+                    pipeline.addLast("RpcMessageDecoder",new RpcMessageDecoder());
+                    pipeline.addLast("ChatClientHandler",new ChatClientHandler());
                 }
             });
             ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 9000).sync();
             Channel channel = channelFuture.channel();
 
-            for (int i = 0; i < 50; i++) {
-                channel.writeAndFlush("hello world!"); /* TCP是字节流，需要程序自定义分隔，还原发送报文 */
+            for (int i = 0; i < 10; i++) {
+                RpcMessageUtil.writeAndFlush(channel,"hello world!");//测试拆分包
             }
 
+            channel.closeFuture().sync();
         }finally {
             work.shutdownGracefully();
         }

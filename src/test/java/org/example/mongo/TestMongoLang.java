@@ -41,7 +41,7 @@ public class TestMongoLang {
 
     @Test
     public void doLangUpdate(){
-        String appName = "C:\\git\\overseaslive\\overseas-mall";
+        String appName = "C:\\git\\overseaslive\\overseas-external";
         File rootFile = new File(appName);
         File[] listFiles = rootFile.listFiles();
         if(listFiles == null){

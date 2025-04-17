@@ -2,14 +2,12 @@ package org.example.netty.netty.chat;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
-import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
-import org.example.netty.netty.codec.ChatServerHandler_Proto;
+import org.example.netty.netty.codec.RpcMessageDecoder;
+import org.example.netty.netty.codec.RpcMessageEncoder;
 
 /**
  * @author chenxuegui
@@ -30,16 +28,19 @@ public class ChatServer {
 
             serverBootstrap.channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_REUSEADDR, true)
-                    .option(ChannelOption.SO_BACKLOG,1024);
+                    .option(ChannelOption.SO_BACKLOG,128);
 
-            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() { /* 客户端建立连接后，初始化数据处理管道回调 */
+            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() { /* 客户端建立连接后，回调添加管道处理器 */
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
 
-                    pipeline.addLast("encoder",new StringEncoder());
-                    pipeline.addLast("decoder",new StringDecoder());
-                    pipeline.addLast("serverHandler",new ChatServerHandler());
+                    //outBound - 对象转字节流
+                    pipeline.addLast("RpcMessageEncoder",new RpcMessageEncoder());
+
+                    // inBound - TCP字节流解码
+                    pipeline.addLast("RpcMessageDecoder",new RpcMessageDecoder());
+                    pipeline.addLast("ChatServerHandler",new ChatServerHandler());
                 }
             });
 

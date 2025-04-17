@@ -44,7 +44,7 @@ public class ChatClient {
                 //通过 channel 发送到服务器端
                 channel.writeAndFlush(msg);
             }
-            /*for (int i = 0; i < 200; i++) {
+            /*for (int i = 0; i < 200; i++) {  //粘包拆包测试
                 channel.writeAndFlush("hello，诸葛!" + "_");
             }*/
         } finally {

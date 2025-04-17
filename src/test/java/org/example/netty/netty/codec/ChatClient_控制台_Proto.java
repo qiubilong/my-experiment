@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
-import org.example.netty.netty.vo.UserMessage;
+import org.example.netty.netty.common.UserMessage;
 import org.example.netty.tuling.netty.codec.ProtostuffUtil;
 
 import java.util.Scanner;

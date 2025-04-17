@@ -5,12 +5,11 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.netty.netty.vo.UserMessage;
+import org.example.netty.netty.common.UserMessage;
 import org.example.netty.tuling.netty.codec.ProtostuffUtil;
 
 /**
@@ -27,11 +26,12 @@ public class ChatServerHandler_Proto extends ChannelInboundHandlerAdapter {
         Channel channel = ctx.channel();
 
         ByteBuf byteBuf = (ByteBuf) msg;
-        ByteBuf copy = byteBuf.copy();
-        byte[] bytes = new byte[byteBuf.readableBytes()];
+        log.info("channelRead byteBuf={}",byteBuf);
+
+        byte[] bytes = new byte[10];
         byteBuf.readBytes(bytes);
-        UserMessage userMessage = ProtostuffUtil.deserializer(bytes, UserMessage.class);
-        log.info("客户端["+channel.remoteAddress()+"]发送消息 ："+ userMessage);
+      /*  UserMessage userMessage = ProtostuffUtil.deserializer(bytes, UserMessage.class);
+        log.info("客户端["+channel.remoteAddress()+"]发送消息 ："+ userMessage);*/
 
        /* for (Channel channelClient : channelGroup) {
             if(channelClient != channel){
@@ -41,9 +41,10 @@ public class ChatServerHandler_Proto extends ChannelInboundHandlerAdapter {
     }
 
 
-    @Override
+    @Override//服务端每次读完一次完整的数据之后，回调该方法，表示数据读取完毕；
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        super.channelReadComplete(ctx);
+        Channel channel = ctx.channel();
+        log.info("channelReadComplete 客户端={}",channel.remoteAddress());
     }
 
     @Override

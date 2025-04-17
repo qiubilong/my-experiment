@@ -7,27 +7,30 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.example.netty.netty.common.RpcMessage;
+import org.example.netty.netty.common.RpcMessageUtil;
+import org.example.netty.netty.common.UserMessage;
+import org.example.netty.tuling.netty.codec.ProtostuffUtil;
 
 /**
  * @author chenxuegui
  * @since 2025/4/16
  */
 @Slf4j
-public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
+public class ChatServerHandler extends SimpleChannelInboundHandler<RpcMessage> {
 
     static ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    @Override /* channelRead()ByteBuf消息参数  -->  channelRead0()泛型消息参数    */
+    protected void channelRead0(ChannelHandlerContext ctx, RpcMessage rpcMessage) throws Exception {
         Channel channel = ctx.channel();
-        log.info("客户端["+channel.remoteAddress()+"]发送消息 ："+ msg);
+
+        UserMessage userMessage = ProtostuffUtil.deserializer(rpcMessage.getContent(), UserMessage.class);
+        log.info("客户端["+channel.remoteAddress()+"]发送消息 ："+ userMessage);
 
         for (Channel channelClient : channelGroup) {
             if(channelClient != channel){
-                channelClient.writeAndFlush("客户端["+channel.remoteAddress()+"]发送消息:" + msg);
+                RpcMessageUtil.writeAndFlush(channelClient,userMessage);
             }
         }
     }
@@ -41,10 +44,10 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
         log.info("客户端["+channel.remoteAddress()+"]建立连接");
-        for (Channel channelClient : channelGroup) {
-            channelClient.writeAndFlush("客户端["+channel.remoteAddress()+"]已上线...");
-        }
 
+        for (Channel channelClient : channelGroup) {
+            RpcMessageUtil.writeAndFlush(channelClient,"客户端["+channel.remoteAddress()+"]已上线...");
+        }
         channelGroup.add(channel);
     }
 

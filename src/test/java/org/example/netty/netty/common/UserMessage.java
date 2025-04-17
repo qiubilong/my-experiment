@@ -1,4 +1,4 @@
-package org.example.netty.netty.vo;
+package org.example.netty.netty.common;
 
 import lombok.Data;
 import lombok.ToString;

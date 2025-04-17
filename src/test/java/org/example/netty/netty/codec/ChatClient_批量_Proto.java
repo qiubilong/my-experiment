@@ -7,12 +7,9 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.FixedLengthFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
-import org.example.netty.netty.vo.UserMessage;
+import org.example.netty.netty.common.UserMessage;
 import org.example.netty.tuling.netty.codec.ProtostuffUtil;
-
-import java.util.Scanner;
 
 /**
  * @author chenxuegui
@@ -37,7 +34,6 @@ public class ChatClient_批量_Proto {
 
                     ChannelPipeline pipeline = ch.pipeline();
 
-                    pipeline.addLast("encoder",new FixedLengthFrameDecoder(10240));
                     pipeline.addLast("clientHandler_Proto",new ChatClientHandler_Proto());
                 }
             });
@@ -51,6 +47,11 @@ public class ChatClient_批量_Proto {
                 channel.writeAndFlush(byteBuf);
             }
 
+            Thread.sleep(10000);
+            UserMessage userMessage = new UserMessage(channel.localAddress().toString(),"hello world1111");
+            byte[] bytes = ProtostuffUtil.serializer(userMessage);
+            ByteBuf byteBuf  = Unpooled.copiedBuffer(bytes);
+            channel.writeAndFlush(byteBuf);
             channelFuture.channel().closeFuture().sync();
         }finally {
             work.shutdownGracefully();

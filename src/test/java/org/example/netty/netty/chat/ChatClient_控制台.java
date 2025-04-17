@@ -34,7 +34,7 @@ public class ChatClient_控制台 {
                 protected void initChannel(SocketChannel ch) throws Exception {
 
                     ChannelPipeline pipeline = ch.pipeline();
-
+                    /* 缺失从字节流中分包的处理器，会有粘包拆包问题 */
                     pipeline.addLast("encoder",new StringEncoder());
                     pipeline.addLast("decoder",new StringDecoder());
                     pipeline.addLast("clientHandler",new ChatClientHandler());
