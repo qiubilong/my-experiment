@@ -23,7 +23,7 @@ public class ChatServer {
 
 
         EventLoopGroup boss = new NioEventLoopGroup(1);/* 处理客户端连接accept */
-        EventLoopGroup work = new NioEventLoopGroup(4);/* 处理客户端读写 */   //默认核心数2倍
+        EventLoopGroup work = new NioEventLoopGroup();/* 处理客户端读写 */   //默认核心数2倍
 
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -33,7 +33,7 @@ public class ChatServer {
                     .option(ChannelOption.SO_REUSEADDR, true)
                     .option(ChannelOption.SO_BACKLOG,128);
 
-            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() { /* 客户端建立连接后，回调添加管道处理器 */
+            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() { /* 客户端建立连接后（channel注册到IO多路复用器），回调管道初始化 ChannelInitializer */
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
