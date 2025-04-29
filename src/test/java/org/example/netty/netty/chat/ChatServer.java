@@ -23,7 +23,7 @@ public class ChatServer {
 
 
         EventLoopGroup boss = new NioEventLoopGroup(1);/* 处理客户端连接accept */
-        EventLoopGroup work = new NioEventLoopGroup(4);/* 处理客户端读写 */   //默认核心数2倍
+        EventLoopGroup work = new NioEventLoopGroup();/* 处理客户端读写 */   //默认核心数2倍
 
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -33,7 +33,7 @@ public class ChatServer {
                     .option(ChannelOption.SO_REUSEADDR, true)
                     .option(ChannelOption.SO_BACKLOG,128);
 
-            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() { /* 客户端建立连接后，回调添加管道处理器 */
+            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() { /* 客户端Channel建立后，（注册到IO多路复用器），回调管道初始化 ChannelInitializer */
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
@@ -42,7 +42,7 @@ public class ChatServer {
                     pipeline.addLast("RpcMessageEncoder",new RpcMessageEncoder());
 
                     // inBound - TCP字节流解码
-                    pipeline.addLast(new IdleStateHandler(5, 0, 0, TimeUnit.SECONDS));//心跳保活检查，下一个Handler必须实现userEventTriggered
+                    pipeline.addLast(new IdleStateHandler(60, 0, 0, TimeUnit.SECONDS));//心跳保活检查，下一个Handler必须实现userEventTriggered
                     pipeline.addLast("RpcMessageDecoder",new RpcMessageDecoder());
                     pipeline.addLast("ChatServerHandler",new ChatServerHandler());
                 }
