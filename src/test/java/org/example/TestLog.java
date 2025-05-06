@@ -12,10 +12,12 @@ import java.util.Scanner;
 public class TestLog {
     
     static Logger logger = LoggerFactory.getLogger("ROOT");
+    static Logger logger1 = LoggerFactory.getLogger(TestLog.class);
 
     public static void main(String[] args) {
 
         logger.info("eeee");
+        logger1.info("xxx");
 
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

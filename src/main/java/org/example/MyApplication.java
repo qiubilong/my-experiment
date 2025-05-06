@@ -4,6 +4,7 @@ import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @MapperScan("org.example.web.dao.mapper")
@@ -11,7 +12,33 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MyApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MyApplication.class, args);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(MyApplication.class, args);
+
+
+        //SpringApplication.exit(applicationContext);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Shutdown Hook开始执行...");
+            try {
+                Thread.sleep(30000); // 等待30秒
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            System.out.println("Shutdown Hook执行完毕");
+        }));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("多线程开始执行...");
+                try {
+                    Thread.sleep(30000); // 等待30秒
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                System.out.println("多线程执行完毕");
+            }
+        }).start();
     }
 
 }

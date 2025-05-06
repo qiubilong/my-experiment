@@ -46,6 +46,10 @@ spring:
     mongodb:
       uri: mongodb://192.168.229.130:27017/appdb
 
+  elasticsearch:
+    uris: http://localhost:9200
+    connection-timeout: 3s
+
   datasource:
     url: jdbc:mysql://localhost:3306/experiment?useSSL=false&autoReconnect=true&characterEncoding=utf8&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver

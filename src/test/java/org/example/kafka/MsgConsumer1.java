@@ -110,7 +110,7 @@ public class MsgConsumer1 {
             if (records.count() > 0) {
                 // 手动同步提交offset，当前线程会阻塞直到offset提交成功
                 // 一般使用同步提交，因为提交之后一般也没有什么逻辑代码了
-                //consumer.commitSync();/* 提交最新的offset，也就是这一批的消息全部确认 */
+                consumer.commitSync();/* 提交最新的offset，也就是这一批的消息全部确认 */
 
                 // 手动异步提交offset，当前线程提交offset不会阻塞，可以继续处理后面的程序逻辑
                /** consumer.commitAsync(new OffsetCommitCallback() {
