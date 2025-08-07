@@ -20,11 +20,11 @@ public class BloomFilterRedissonTest {
         config.useSingleServer().setAddress("redis://127.0.0.1:6379");
 
         // 初始化布隆过滤器
-        RedissonClient client = Redisson.create(config);
+        RedissonClient redissonClient = Redisson.create(config);
 
-        client.getKeys().delete(key);
+        redissonClient.getKeys().delete(key);
 
-        RBloomFilter<Object> bloomFilter = client.getBloomFilter(key);
+        RBloomFilter<Object> bloomFilter = redissonClient.getBloomFilter(key);
 
         bloomFilter.tryInit(expectedInsertions, fpp);
         // 布隆过滤器增加元素
@@ -45,7 +45,7 @@ public class BloomFilterRedissonTest {
 
 
         for (Integer i = 0; i < expectedInsertions; i++) {
-            client.getSet(key+"_Set").add(i);
+            redissonClient.getSet(key+"_Set").add(i);
         }
 
     }

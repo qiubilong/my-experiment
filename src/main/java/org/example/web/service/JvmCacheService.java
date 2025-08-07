@@ -48,7 +48,7 @@ public class JvmCacheService {
         return userPurse;
     }
 
-    /** 防止缓存雪崩 */
+    /** 防止缓存击穿 */
     public UserPurse queryUserPurseProtect(Long uid){
         return medalConfigCache.get(uid,k->{
             UserPurse userPurse = userPurseService.getUserPurseInfo(uid);

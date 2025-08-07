@@ -65,7 +65,7 @@ public class 热点缓存ProductService {
 
         try {
             //dao更新数据库
-            productMapper.updateProduct(product);/* 解决数据库缓存双写不一致问题，要么解锁，要么监听数据库修改流水更新 */
+            productMapper.updateProduct(product);/* 解决数据库缓存双写不一致问题，要么加锁，要么监听数据库修改流水更新 */
 
             productsCache.put(productId,product);
             String keyCache = keyProductCache(productId);

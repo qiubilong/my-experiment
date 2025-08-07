@@ -18,7 +18,7 @@ public class IDsBloomFilterTest {
     private static Double fpp = 0.001;
 
     static RedisCommands<String, String> redis;
-    public static void  exposedRecord(Long uid, List<Long> ids) {
+    public static void  exposedRecord(Long uid, List<Long> ids) { /* 链式布隆过滤器 */
         MyBloomFilter bloomFilter = null;
 
         String keyExposed = "exposed:"+uid;
@@ -29,7 +29,7 @@ public class IDsBloomFilterTest {
             String[] split = exposedData.split("#");
             if(split.length ==2){
                 exposedNum = Integer.valueOf(split[0]);
-                if(exposedNum + ids.size() <= expectedInsertions){
+                if(exposedNum + ids.size() <= expectedInsertions){//1024
                     bloomFilter = new MyBloomFilter(expectedInsertions,fpp,split[1]);
                     newData = false;
                 }
