@@ -21,7 +21,7 @@ class Solution {
         }
         for (int i = k; i < arr.length; i++) {
             Integer peek = queue.peek();
-            if(arr[i] < peek){
+            if(arr[i] < peek){//相当于删掉最大
                 queue.poll();
                 queue.add(arr[i]);
             }

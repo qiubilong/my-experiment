@@ -35,7 +35,7 @@ public class Solution {
         if(this.index ==1){
             target = root;
         }
-        this.index --;
+        this.index --; /* 遍历一次，跳过一次 */
 
         kthSmallestDo(root.right);
     }

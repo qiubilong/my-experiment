@@ -25,7 +25,7 @@ public class Solution {
         int left = 0;
         int right = 0;
 
-        for (;right < s.length(); right++ ){
+        for (;right < s.length(); right++ ){ // "abcabcbb"
             int ch = s.charAt(right);
             int index = asc[ch];
             if(index>=0){

@@ -32,7 +32,7 @@ public class 最大子和 {
     }
 
     /** 暴力解法 */
-    public static int maxSubArray2(int[] nums){
+    public static int maxSubArray2(int[] nums){//{2,1,-3,4,-1,2,1,-5,4}
         int max = nums[0];
         for (int i = 0; i < nums.length; i++) {
             int sum = nums[i];

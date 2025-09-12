@@ -21,13 +21,13 @@ public class 数组第K大元素 {
         if(nums.length < k){
             throw new IllegalArgumentException();
         }
-        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        PriorityQueue<Integer> queue = new PriorityQueue<>();//默认小顶堆
         for (int num : nums) {
             if(queue.size() < k){
                 queue.add(num);
             }else {
                 int peek = queue.peek();
-                if(peek<num){
+                if(peek<num){//删掉最小
                     queue.poll();
                     queue.add(num);
                 }
