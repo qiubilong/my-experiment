@@ -102,7 +102,7 @@ public class MsgConsumer1 {
 
         while (true) {
 
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));//长轮询拉取消息
+            ConsumerRecords<String, String> records = consumer.poll(1000);//长轮询拉取消息
             for (ConsumerRecord<String, String> record : records) {
                 log.info("收到消息：partition = {},offset = {}, key = {}, value = {}", record.partition(), record.offset(), record.key(), record.value());
             }

@@ -50,7 +50,7 @@ public class Solution {
 
         for (int i = 0; i < nums.length; i++) {
             while (nums[i] != i){
-                if(nums[nums[i]] == nums[i]){
+                if(nums[nums[i]] == nums[i]){//nums[i]当做下标
                     return nums[i];
                 }
                 swap(nums,nums[i],i);

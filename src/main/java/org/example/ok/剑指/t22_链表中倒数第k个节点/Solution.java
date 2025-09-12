@@ -39,7 +39,7 @@ public class Solution {
         return length;
     }
 
-    /** 快慢指针 */
+    /** 快慢指针 */  /* 其实就是保持相对偏移 */
     public ListNode lastKNode2(ListNode head,int k){
         if(head == null){
             return null;

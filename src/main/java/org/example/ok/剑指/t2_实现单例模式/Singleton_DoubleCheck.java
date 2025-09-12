@@ -23,4 +23,9 @@ public class Singleton_DoubleCheck {
         }
         return instance;
     }
+    /*
+    * 缺点
+    *  1、代码实现复杂
+    *  2、volatile开销
+     *  */
 }

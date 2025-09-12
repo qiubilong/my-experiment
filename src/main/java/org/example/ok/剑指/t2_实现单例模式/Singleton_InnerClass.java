@@ -13,7 +13,7 @@ public class Singleton_InnerClass {
     }
 
     public static Singleton_InnerClass getInstance(){
-        return SingletonHolder.INSTANCE;
+        return SingletonHolder.INSTANCE; /* 首次引用内部类，才实例化单例 */
     }
 
 

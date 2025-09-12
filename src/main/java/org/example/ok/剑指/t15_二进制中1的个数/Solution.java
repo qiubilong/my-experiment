@@ -6,6 +6,9 @@ package org.example.ok.剑指.t15_二进制中1的个数;
  */
 public class Solution {
     public static void main(String[] args) {
+
+        System.out.println(Integer.toBinaryString(3));
+
         System.out.println(countOne(11));
         System.out.println(countOne(2147483645));
         System.out.println(countOne_逻辑与(11));
@@ -17,7 +20,7 @@ public class Solution {
         int count = 0;
         int flag = 1;
         while (flag>0){
-            int value = flag & n;
+            int value = flag & n;//只保留当前位
             if(value == flag){
                 count ++;
             }
@@ -30,7 +33,7 @@ public class Solution {
     public static int countOne_逻辑与(int n) {
         int count = 0;
         while (n != 0){
-            int value = n & 1;
+            int value = n & 1;//总是统计最末尾
             if(value == 1){
                 count ++;
             }

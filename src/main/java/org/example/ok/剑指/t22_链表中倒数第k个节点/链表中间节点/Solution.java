@@ -16,8 +16,8 @@ public class Solution {
         if(head == null){
             return null;
         }
-        ListNode left  = head;
-        ListNode right = head.next;
+        ListNode left  = head;      /* 走一步 */
+        ListNode right = head.next; /* 走两步 */
         boolean two = false;
         if(right !=null){
             two = true;

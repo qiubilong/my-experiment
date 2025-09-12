@@ -25,7 +25,7 @@ public class Solution_不改变数组 {
         int left = 1;
         int right = nums.length -1;
         while (left < right){
-            int mid = left + (right - left) /2;
+            int mid = left + (right - left) /2;//相当于中间数
             int count = 0;
             for (int num : nums) {
                 if(num <= mid){
