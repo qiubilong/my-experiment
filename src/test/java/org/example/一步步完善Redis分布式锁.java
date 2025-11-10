@@ -123,6 +123,7 @@ public class 一步步完善Redis分布式锁 {
         } finally {
             redis.del(lockKey);/* 2、如果doTaskInner执行时间过长，分布式锁已经过期，这里将会删除了其他线程获取分布式锁，然后新的线程又可以获取到分布式锁，导致锁失效  */
         }
+
     }
 
 

@@ -12,7 +12,7 @@ public class MongoConfig {
     /**
      * 定制TypeMapper去掉_class属性
      */
-    @Bean
+  /*  @Bean
     MappingMongoConverter mappingMongoConverter(
             MongoDatabaseFactory mongoDatabaseFactory,
             MongoMappingContext context, MongoCustomConversions conversions){
@@ -25,6 +25,6 @@ public class MongoConfig {
         mappingMongoConverter.setTypeMapper(new DefaultMongoTypeMapper(null));
 
         return mappingMongoConverter;
-    }
+    }*/
 
 }

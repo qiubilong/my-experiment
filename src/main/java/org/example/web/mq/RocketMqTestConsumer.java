@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * 注意下@RocketMQMessageListener这个注解的其他属性
  **/
+/*
 @Slf4j
 @Component
 @RocketMQMessageListener(consumerGroup = "MyConsumerGroup", topic = "TestTopic",consumeMode= ConsumeMode.CONCURRENTLY,messageModel= MessageModel.CLUSTERING)
@@ -20,3 +21,4 @@ public class RocketMqTestConsumer implements RocketMQListener<String> {
         log.info("Received message : "+ message);
     }
 }
+*/

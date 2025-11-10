@@ -1,3 +1,4 @@
+/*
 package org.example;
 
 import org.apache.dubbo.config.ApplicationConfig;
@@ -12,10 +13,12 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.concurrent.TimeUnit;
 
+*/
 /**
  * @author chenxuegui
  * @since 2024/1/12
- */
+ *//*
+
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
@@ -70,3 +73,4 @@ public class Dubbo基准测试 {
 
     }
 }
+*/

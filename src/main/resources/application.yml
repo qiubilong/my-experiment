@@ -42,9 +42,9 @@ spring:
         max-active: 100
         max-wait: 1000
 
-  data:
-    mongodb:
-      uri: mongodb://192.168.229.130:27017/appdb
+#  data:
+#    mongodb:
+#      uri: mongodb://192.168.229.130:27017/appdb
 
   elasticsearch:
     uris: http://localhost:9200
@@ -82,9 +82,9 @@ logging:
   level:
     root: info
 
-rocketmq:
-  name-server: 192.168.229.130:9876
-  producer:
-    group: producerAAA
-  consumer:
-    group: consumerBBB
+#rocketmq:
+#  name-server: 192.168.229.130:9876
+#  producer:
+#    group: producerAAA
+#  consumer:
+#    group: consumerBBB
